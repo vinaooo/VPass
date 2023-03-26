@@ -11,11 +11,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-
-  cupertino_icons: ^1.0.2
-  url_launcher: ^6.1.10
-  provider: ^6.0.5
-  flutter_svg: ^2.0.4
   dynamic_color: ^1.6.2
   desktop_window: ^0.4.0
   crypto: ^3.0.2
