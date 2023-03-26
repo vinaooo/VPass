@@ -20,8 +20,8 @@ We recommend that you enter information in these fields that will help you easil
 
 **Examples**
 ![Alias and Scret](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-08-51.png)
-
+![Different Alias ](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-13-24.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTQ3MjE1NzU2NSwxOTk1NDU0OTU3LC02Nz
-MxODg3ODBdfQ==
+eyJoaXN0b3J5IjpbMTM3NzMwMzU0NCwxNDcyMTU3NTY1LDE5OT
+U0NTQ5NTcsLTY3MzE4ODc4MF19
 -->
