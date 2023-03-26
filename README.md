@@ -32,9 +32,13 @@ If you leave one field empty or enter the same information in both fields, the g
 
 So go ahead and enter any information you want in the Alias and Secret fields, and our app will take care of the rest. Try it out now and experience the convenience of hassle-free password management!
 
+We offer a wide range of password characteristic settings to suit your preferences and security needs.
 
+In our app, you can choose to include special characters, numbers, and uppercase letters in your passwords to make them stronger and more secure. You can also adjust the length of your passwords and select whether to include ambiguous characters to avoid confusion.
+
+To access these settings, simply navigate to the password characteristic settings section of the app. From there, you can customize your password settings to your liking and generate passwords that meet your specific requirements.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDEyOTMzMDEwLC02NzYzNjUxNDgsLTE4OD
+eyJoaXN0b3J5IjpbOTc5NjY2ODI2LC02NzYzNjUxNDgsLTE4OD
 c0OTQzMzIsMTQ3MjE1NzU2NSwxOTk1NDU0OTU3LC02NzMxODg3
 ODBdfQ==
 -->
