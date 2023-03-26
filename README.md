@@ -25,7 +25,12 @@ We recommend that you enter information in these fields that will help you easil
 ![Different Alias and Secrets](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-13-24.png)
 ![enter image description here](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-12-33.png)
 
+We want to remind you that no matter what you type in the Alias and Secret fields, a unique and strong password will always be generated for you. It's important to remember that these fields are independent of each other.
+
+If you leave one field empty or enter the same information in both fields, the generated password will still be different. Our app uses advanced algorithms to ensure maximum security, so you can rest assured that your passwords are protected.
+
+So go ahead and enter any information you want in the Alias and Secret fields, and our app will take care of the rest. Try it out now and experience the convenience of hassle-free password management!
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE4ODc0OTQzMzIsMTQ3MjE1NzU2NSwxOT
-k1NDU0OTU3LC02NzMxODg3ODBdfQ==
+eyJoaXN0b3J5IjpbLTY3NjM2NTE0OCwtMTg4NzQ5NDMzMiwxND
+cyMTU3NTY1LDE5OTU0NTQ5NTcsLTY3MzE4ODc4MF19
 -->
