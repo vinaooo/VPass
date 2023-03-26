@@ -20,6 +20,7 @@ Once you've entered your information, a strong and secure password will be gener
 We recommend that you enter information in these fields that will help you easily recover your password if needed, and that you create a private pattern that only you can remember.
 
 </br>
+</br>
 
 **Examples**
 
@@ -45,7 +46,7 @@ In our app, you can choose to include special characters, numbers, and uppercase
 
 To access these settings, simply navigate to the password characteristic settings section of the app. From there, you can customize your password settings to your liking and generate passwords that meet your specific requirements.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTEyNDg4Mzg0OSwtNjc2MzY1MTQ4LC0xOD
+eyJoaXN0b3J5IjpbLTUxNjU2ODQ3NiwtNjc2MzY1MTQ4LC0xOD
 g3NDk0MzMyLDE0NzIxNTc1NjUsMTk5NTQ1NDk1NywtNjczMTg4
 NzgwXX0=
 -->
