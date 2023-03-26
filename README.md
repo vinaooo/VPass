@@ -19,7 +19,9 @@ Once you've entered your information, a strong and secure password will be gener
 We recommend that you enter information in these fields that will help you easily recover your password if needed, and that you create a private pattern that only you can remember.
 
 **Examples**
+![Alias and Scret](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-08-51.png)
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTk5NTQ1NDk1NywtNjczMTg4NzgwXX0=
+eyJoaXN0b3J5IjpbMTQ3MjE1NzU2NSwxOTk1NDU0OTU3LC02Nz
+MxODg3ODBdfQ==
 -->
