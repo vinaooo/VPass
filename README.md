@@ -19,6 +19,8 @@ Once you've entered your information, a strong and secure password will be gener
 
 We recommend that you enter information in these fields that will help you easily recover your password if needed, and that you create a private pattern that only you can remember.
 
+</br>
+
 **Examples**
 
 ![enter image description here](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-12-22.png)
@@ -43,7 +45,7 @@ In our app, you can choose to include special characters, numbers, and uppercase
 
 To access these settings, simply navigate to the password characteristic settings section of the app. From there, you can customize your password settings to your liking and generate passwords that meet your specific requirements.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE1NDc4MjIyMjIsLTY3NjM2NTE0OCwtMT
-g4NzQ5NDMzMiwxNDcyMTU3NTY1LDE5OTU0NTQ5NTcsLTY3MzE4
-ODc4MF19
+eyJoaXN0b3J5IjpbMTEyNDg4Mzg0OSwtNjc2MzY1MTQ4LC0xOD
+g3NDk0MzMyLDE0NzIxNTc1NjUsMTk5NTQ1NDk1NywtNjczMTg4
+NzgwXX0=
 -->
