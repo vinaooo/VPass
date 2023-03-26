@@ -1,0 +1,35 @@
+name: vpass_7
+description: A new Flutter project.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0-290.0.dev <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+
+  cupertino_icons: ^1.0.2
+  url_launcher: ^6.1.10
+  provider: ^6.0.5
+  flutter_svg: ^2.0.4
+  dynamic_color: ^1.6.2
+  desktop_window: ^0.4.0
+  crypto: ^3.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^2.0.0
+
+
+flutter:
+  uses-material-design: true
+  fonts:
+  - family: ShareTechMono
+    fonts:
+    - asset: assets/fonts/ShareTechMono-Regular.ttf
