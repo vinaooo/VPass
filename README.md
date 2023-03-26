@@ -19,10 +19,12 @@ Once you've entered your information, a strong and secure password will be gener
 We recommend that you enter information in these fields that will help you easily recover your password if needed, and that you create a private pattern that only you can remember.
 
 **Examples**
+
 ![enter image description here](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-12-22.png)
 ![Alias and Scret](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-08-51.png)
 ![Different Alias and Secrets](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-13-24.png)
+![enter image description here](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-12-33.png)
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE4MjE4ODgxNTIsMTQ3MjE1NzU2NSwxOT
-k1NDU0OTU3LC02NzMxODg3ODBdfQ==
+eyJoaXN0b3J5IjpbMzc1ODA3NjM4LDE0NzIxNTc1NjUsMTk5NT
+Q1NDk1NywtNjczMTg4NzgwXX0=
 -->
