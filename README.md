@@ -11,9 +11,8 @@ Our app provides a hassle-free alternative to traditional password management, m
 So why waste any more time juggling passwords and struggling to remember them all? Give our app a try and simplify your digital life today!
 
 ## Getting Sstarted
-![]
-(https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2010-29-50.png)
+![First scren](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2010-29-50.png)
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTIwMTI4MTQxNF19
+eyJoaXN0b3J5IjpbNzE0MzE1MzIxXX0=
 -->
