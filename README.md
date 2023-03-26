@@ -34,11 +34,7 @@ If you leave one field empty or enter the same information in both fields, the g
 
 So go ahead and enter any information you want in the Alias and Secret fields, and our app will take care of the rest. Try it out now and experience the convenience of hassle-free password management!
 
-```none
-</br>
-``````none
-</br>
-```
+
 **Password especifications:**
 
 ![configs](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-26-49.png)
@@ -49,7 +45,7 @@ In our app, you can choose to include special characters, numbers, and uppercase
 
 To access these settings, simply navigate to the password characteristic settings section of the app. From there, you can customize your password settings to your liking and generate passwords that meet your specific requirements.
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTE0MzQ2NTIwMiwtNjc2MzY1MTQ4LC0xOD
-g3NDk0MzMyLDE0NzIxNTc1NjUsMTk5NTQ1NDk1NywtNjczMTg4
-NzgwXX0=
+eyJoaXN0b3J5IjpbLTMzMDE5Mzk2NiwxMTQzNDY1MjAyLC02Nz
+YzNjUxNDgsLTE4ODc0OTQzMzIsMTQ3MjE1NzU2NSwxOTk1NDU0
+OTU3LC02NzMxODg3ODBdfQ==
 -->
