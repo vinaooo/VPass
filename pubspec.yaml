@@ -14,6 +14,8 @@ dependencies:
   dynamic_color: ^1.6.2
   desktop_window: ^0.4.0
   crypto: ^3.0.2
+  sensitive_clipboard: ^0.0.3
+  convert: ^3.1.1
 
 dev_dependencies:
   flutter_test:
@@ -28,3 +30,6 @@ flutter:
   - family: ShareTechMono
     fonts:
     - asset: assets/fonts/ShareTechMono-Regular.ttf
+  - family: Ubuntu
+    fonts:
+    - asset: assets/fonts/Ubuntu-Regular.ttf

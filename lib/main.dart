@@ -8,13 +8,14 @@ import 'dart:core';
 import 'dart:io' show Platform;
 import 'package:flutter/services.dart';
 import 'package:crypto/crypto.dart';
+import 'package:convert/convert.dart';
 import 'dart:convert';
+import 'package:sensitive_clipboard/sensitive_clipboard.dart';
 
 const double narrowScreenWidthThreshold = 450;
-const double mediumWidthBreakpoint = 1000;
-const double largeWidthBreakpoint = 1500;
+const double mediumWidthBreakpoint = 800;
+const double largeWidthBreakpoint = 1200;
 const double transitionLength = 500;
-const colDivider = SizedBox(height: 10);
 const smallSpacing = 10.0;
 const double widthConstraint = 450;
 
@@ -229,51 +230,45 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     }
   }
 
-  PreferredSizeWidget createAppBar() {
-    return AppBar(
-      title: const Text('VPass')
-      //  widget.useMaterial3
-      //     ? const Text('Material 3')
-      //     : const Text('Material 2'),
-    );
-  }
-
-  
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: controller,
-      builder: (context, child) {
-        return NavigationTransition(
-          scaffoldKey: scaffoldKey, //inicio?
-          animationController: controller,
-          railAnimation: railAnimation,
-          appBar: createAppBar(),
-          body: createScreenFor(
-              ScreenSelected.values[screenIndex], controller.value == 1),
-          navigationRail: NavigationRail(
-            extended: showLargeSizeLayout,
-            destinations: navRailDestinations,
-            selectedIndex: screenIndex,
-            onDestinationSelected: (index) {
-              setState(() {
-                screenIndex = index;
-                handleScreenChanged(screenIndex);
-              });
-            },
-          ),
-          navigationBar: NavigationBars(
-            onSelectItem: (index) {
-              setState(() {
-                screenIndex = index;
-                handleScreenChanged(screenIndex);
-              });
-            },
-            selectedIndex: screenIndex,
-          ),
-        );
-      },
-    );
+        animation: controller,
+        builder: (context, child) {
+          return NavigationTransition(
+            scaffoldKey: scaffoldKey, //inicio?
+            animationController: controller,
+            railAnimation: railAnimation,
+            appBar: Platform.isAndroid == true
+                ? AppBar(
+                    title: const Text('VPass'),
+                    centerTitle: true,
+                  )
+                : null,
+            body: createScreenFor(
+                ScreenSelected.values[screenIndex], controller.value == 1),
+            navigationRail: NavigationRail(
+              extended: showLargeSizeLayout,
+              destinations: navRailDestinations,
+              selectedIndex: screenIndex,
+              onDestinationSelected: (index) {
+                setState(() {
+                  screenIndex = index;
+                  handleScreenChanged(screenIndex);
+                });
+              },
+            ),
+            navigationBar: NavigationBars(
+              onSelectItem: (index) {
+                setState(() {
+                  screenIndex = index;
+                  handleScreenChanged(screenIndex);
+                });
+              },
+              selectedIndex: screenIndex,
+            ),
+          );
+        });
   }
 }
 
@@ -293,7 +288,7 @@ class NavigationTransition extends StatefulWidget {
   final CurvedAnimation railAnimation;
   final Widget navigationRail;
   final Widget navigationBar;
-  final PreferredSizeWidget appBar;
+  final appBar;
   final Widget body;
 
   @override
@@ -624,17 +619,17 @@ class _BottomSheetSectionState extends State<BottomSheetSection> {
       IconButton(
           onPressed: () {
             showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(content: const Text(
-            'Sorry this is not implemented'),
-        actions: <Widget>[
-          FilledButton(
-            child: const Text('Dismiss'),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
-      ),
-    );
+              context: context,
+              builder: (context) => AlertDialog(
+                content: const Text('Sorry this is not implemented'),
+                actions: <Widget>[
+                  FilledButton(
+                    child: const Text('Dismiss'),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
+            );
           },
           icon: const Icon(Icons.brightness_4_outlined)),
     ];
@@ -694,7 +689,7 @@ class _BottomSheetSectionState extends State<BottomSheetSection> {
     themeButtonList = List.generate(
         themeButtonList.length,
         (index) => Padding(
-              padding: const EdgeInsets.fromLTRB(40.0, 30.0, 40.0, 20.0),
+              padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 20.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -740,7 +735,7 @@ class _BottomSheetSectionState extends State<BottomSheetSection> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8), // <-- Radius
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
                         child: const Text(
@@ -754,16 +749,14 @@ class _BottomSheetSectionState extends State<BottomSheetSection> {
                             builder: (context) {
                               return SizedBox(
                                 height: 121,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    ListView(
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      children: themeButtonList,
-                                    ),
-                                  ],
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: ListView(
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    children: themeButtonList,
+                                  ),
                                 ),
                               );
                             },
@@ -776,7 +769,7 @@ class _BottomSheetSectionState extends State<BottomSheetSection> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8), // <-- Radius
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
                         child: const Text(
@@ -789,7 +782,7 @@ class _BottomSheetSectionState extends State<BottomSheetSection> {
                             constraints: const BoxConstraints(maxWidth: 640),
                             builder: (context) {
                               return SizedBox(
-                                height: 150,
+                                height: 121,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 32.0),
@@ -878,354 +871,85 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
 
   int currentSliderValue = 32;
 
-  String replaceChars(String str) {
-    str = str.replaceAll("0f", "_#");
-    str = str.replaceAll("1e", "#*");
-    str = str.replaceAll("2d", "^&");
-    str = str.replaceAll("3c", "}^");
-    str = str.replaceAll("4b", "[£");
-    str = str.replaceAll("5a", ";@");
-    str = str.replaceAll("69", ",(");
-    str = str.replaceAll("78", "~%");
-    str = str.replaceAll("87", "=&");
-    str = str.replaceAll("96", "%<");
-    str = str.replaceAll("a5", "*>");
-    str = str.replaceAll("b4", "*/");
-    str = str.replaceAll("c3", "@,");
-    str = str.replaceAll("d2", ").");
-    str = str.replaceAll("e1", "=!");
-    str = str.replaceAll("f0", "})");
-    str = str.replaceAll("11", "]-");
-    str = str.replaceAll("22", "&]");
-
-    str = str.replaceAll("33", "&#");
-    str = str.replaceAll("44", "#*");
-    str = str.replaceAll("55", "+&");
-    str = str.replaceAll("66", "-^");
-    str = str.replaceAll("77", "/£");
-    str = str.replaceAll("88", "*@");
-    str = str.replaceAll("99", "=(");
-    str = str.replaceAll("00", "^%");
-    str = str.replaceAll("Aa", "£ç");
-    str = str.replaceAll("Bb", "\$¢");
-    str = str.replaceAll("Cc", "|>");
-    str = str.replaceAll("Dd", "\\/");
-    str = str.replaceAll("Ee", "\$");
-    str = str.replaceAll("Ff", "\".");
-    str = str.replaceAll("ab", "'!");
-    str = str.replaceAll("cd", "!)");
-    str = str.replaceAll("ef", "&-");
-    str = str.replaceAll("gh", ")]");
-
-    str = str.replaceAll("01", "_#");
-    str = str.replaceAll("12", "%*");
-    str = str.replaceAll("23", "_&");
-    str = str.replaceAll("34", "+^");
-    str = str.replaceAll("45", "£\$");
-    str = str.replaceAll("56", "@^");
-    str = str.replaceAll("67", "(]");
-    str = str.replaceAll("78", "%§");
-    str = str.replaceAll("89", "§[");
-    str = str.replaceAll("9a", "<-");
-    str = str.replaceAll("ab", ">/");
-    str = str.replaceAll("bc", "/%");
-    str = str.replaceAll("cd", ",@");
-    str = str.replaceAll("de", ".*");
-    str = str.replaceAll("ef", "!#");
-    str = str.replaceAll("AB", ")(");
-    str = str.replaceAll("BC", "-}");
-    str = str.replaceAll("CD", "]%");
-
-    str = str.replaceAll("DE", "#_");
-    str = str.replaceAll("EF", "*+");
-    str = str.replaceAll("FG", "&<");
-
-    return str;
-  }
-
-//Numeric character control variables #beginning
-
-  String removeNumbersWithLetters(String str) {
-    str = str.replaceAll("40", "Yg");
-    str = str.replaceAll("39", "Xh");
-    str = str.replaceAll("38", "Wi");
-    str = str.replaceAll("37", "Vj");
-    str = str.replaceAll("36", "Uk");
-    str = str.replaceAll("35", "Tl");
-    str = str.replaceAll("34", "Sm");
-    str = str.replaceAll("33", "Rn");
-    str = str.replaceAll("32", "Qo");
-    str = str.replaceAll("31", "Pp");
-    str = str.replaceAll("30", "Or");
-    str = str.replaceAll("29", "Ns");
-    str = str.replaceAll("28", "Mt");
-    str = str.replaceAll("27", "Lu");
-    str = str.replaceAll("26", "Kv");
-    str = str.replaceAll("25", "Jw");
-    str = str.replaceAll("24", "Ix");
-    str = str.replaceAll("23", "Hy");
-    str = str.replaceAll("22", "gz");
-    str = str.replaceAll("21", "Gy");
-    str = str.replaceAll("20", "Hz");
-    str = str.replaceAll("19", "Iz");
-    str = str.replaceAll("18", "Jy");
-    str = str.replaceAll("17", "Lx");
-    str = str.replaceAll("16", "Mw");
-    str = str.replaceAll("15", "Nv");
-    str = str.replaceAll("14", "Ou");
-    str = str.replaceAll("13", "Pt");
-    str = str.replaceAll("12", "Qr");
-    str = str.replaceAll("11", "Rs");
-    str = str.replaceAll("10", "Sq");
-    str = str.replaceAll("9", "p");
-    str = str.replaceAll("8", "o");
-    str = str.replaceAll("7", "V");
-    str = str.replaceAll("6", "m");
-    str = str.replaceAll("5", "l");
-    str = str.replaceAll("4", "Y");
-    str = str.replaceAll("3", "Z");
-    str = str.replaceAll("2", "I");
-    str = str.replaceAll("1", "H");
-    str = str.replaceAll("0", "G");
-
-    return str;
-  }
-
-  String removeNumbersWithSpecChar(String str) {
-    str = str.replaceAll("0", ">");
-    str = str.replaceAll("9", "<");
-    str = str.replaceAll("8", "[");
-    str = str.replaceAll("7", ")");
-    str = str.replaceAll("6", "+");
-    str = str.replaceAll("5", "_");
-    str = str.replaceAll("4", "@");
-    str = str.replaceAll("3", "%");
-    str = str.replaceAll("2", "&");
-    str = str.replaceAll("1", "!");
-
-    return str;
-  }
-
-//Numeric character control variables #end
-  String replaceLetters(String str) {
-    str = str.replaceAll("a", "0");
-    str = str.replaceAll("b", "7");
-    str = str.replaceAll("c", "2");
-    str = str.replaceAll("d", "3");
-    str = str.replaceAll("e", "5");
-    str = str.replaceAll("f", "1");
-    str = str.replaceAll("g", "4");
-    str = str.replaceAll("h", "8");
-    str = str.replaceAll("i", "1");
-    str = str.replaceAll("j", "4");
-    str = str.replaceAll("k", "5");
-    str = str.replaceAll("l", "6");
-    str = str.replaceAll("m", "0");
-    str = str.replaceAll("n", "7");
-    str = str.replaceAll("o", "2");
-    str = str.replaceAll("p", "3");
-    str = str.replaceAll("q", "5");
-    str = str.replaceAll("r", "1");
-    str = str.replaceAll("s", "4");
-    str = str.replaceAll("t", "8");
-    str = str.replaceAll("u", "3");
-    str = str.replaceAll("v", "5");
-    str = str.replaceAll("w", "7");
-    str = str.replaceAll("x", "1");
-    str = str.replaceAll("y", "0");
-    str = str.replaceAll("z", "7");
-    str = str.replaceAll("A", "2");
-    str = str.replaceAll("B", "3");
-    str = str.replaceAll("C", "5");
-    str = str.replaceAll("D", "1");
-    str = str.replaceAll("E", "4");
-    str = str.replaceAll("F", "8");
-    str = str.replaceAll("G", "6");
-    str = str.replaceAll("H", "7");
-    str = str.replaceAll("I", "8");
-    str = str.replaceAll("J", "0");
-    str = str.replaceAll("K", "0");
-    str = str.replaceAll("L", "7");
-    str = str.replaceAll("M", "2");
-    str = str.replaceAll("N", "3");
-    str = str.replaceAll("O", "5");
-    str = str.replaceAll("P", "1");
-    str = str.replaceAll("Q", "4");
-    str = str.replaceAll("R", "8");
-    str = str.replaceAll("S", "3");
-    str = str.replaceAll("T", "5");
-    str = str.replaceAll("U", "7");
-    str = str.replaceAll("V", "2");
-    str = str.replaceAll("W", "4");
-    str = str.replaceAll("X", "6");
-    str = str.replaceAll("Y", "4");
-    str = str.replaceAll("Z", "9");
-    return str;
-  }
-
-  String camelCase(String str) {
-    String result = "";
-    for (int i = 0; i < str.length; i++) {
-      if (i % 2 == 0) {
-        result += str[i].toUpperCase();
-      } else {
-        result += str[i].toLowerCase();
-      }
-    }
-    return result;
-  }
-
-  bool hasUppercase(String str) {
-    return RegExp(r'[A-Z]').hasMatch(str);
-  }
-
-  bool hasLowerAndUpperCase(String str) {
-    // Checks if the string contains at least one lowercase letter and one uppercase letter
-    return RegExp(r'[a-z]').hasMatch(str) && RegExp(r'[A-Z]').hasMatch(str);
-  }
-
-  bool hasLetters(String str) {
-    // Checks if the string contains at least one letter
-    return str.contains(RegExp(r'[a-zA-Z]'));
-  }
-
-  int findFirstLetterPosition(String str) {
-// Find the position of the first letter in the string
-    //debug purposes
-    if (internDebug == true) {
-      print("findFirstLetterPosition");
-      print("${str.length}    $currentSliderValue");
-    }
-    if (str.length.toInt() > currentSliderValue.toInt()) {
-      str = str.substring(0, 128);
-      //debug purposes
-      if (internDebug == true) {
-        print("Search for first capital letter");
-        print(str);
-        print("1 $str.length");
-      }
-    }
-
-    return str.indexOf(RegExp(r'[a-zA-Z]'));
-  }
-
-  String capitalizeFirstAndLast(String str) {
-    List<String> characters = str.split("");
-    bool firstLetterFound = false;
-
-    for (int i = 0; i < characters.length; i++) {
-      if (firstLetterFound == false) {
-        if (characters[i].toUpperCase() != characters[i].toLowerCase()) {
-          characters[i] = characters[i].toUpperCase();
-          firstLetterFound = true;
-        }
-      } else {
-        if (characters[i].toUpperCase() != characters[i].toLowerCase()) {
-          characters[i] = characters[i].toLowerCase();
-        }
-      }
-    }
-
-    String restructuredText = characters.join();
-    return restructuredText;
-  }
-
-//password generation #beginning
   String pwValue(String aliasStr, String secretStr) {
-    String password = '';
+    String password = "";
 
-    password = "#$aliasStr#$secretStr#";
-    var bytes = utf8.encode(password);
-    var hash = sha512.convert(bytes);
-
-    password = hash.toString();
-//debug purposes
-    if (internDebug == true) {
-      print("sha512: ");
-      print("2 ${password.length}");
-      print(password);
+    String vsha512(String entrada) {
+      var bytes = utf8.encode(entrada);
+      var digest = sha512.convert(bytes);
+      var hexString = hex.encode(digest.bytes);
+      String bigHexString =
+          hexString.toString() + hexString.toString().split('').reversed.join();
+      bigHexString = bigHexString.split('').join() + bigHexString;
+      bigHexString = bigHexString.split('').join() + bigHexString;
+      bigHexString = bigHexString.split('').join() + bigHexString;
+      bigHexString = bigHexString.split('').join() + bigHexString;
+      return bigHexString;
     }
 
-    if (lettersSwitch == false) {
-      password = replaceLetters(password);
+    String encodeHash(String hash) {
+      var bytes = hex.decode(hash);
+      var allowedChars = '''
+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]{};''';
+      var encodedChars = bytes
+          .map((byte) => allowedChars.codeUnitAt(byte % allowedChars.length));
+      return String.fromCharCodes(encodedChars);
     }
-//debug purposes
-    if (internDebug == true) {
-      print("3 ${password.length}");
-      print("remove letters:");
-      print(password);
-    }
-    if (speCharSwitch == true) {
-      password = replaceChars(password);
-    }
-    //debug purposes
-    if (internDebug == true) {
-      print("4 ${password.length}");
-      print("insert special characters:");
-      print(password);
-    }
-    if (numberSwitch == false) {
-      if (lettersSwitch == true) {
-        password = removeNumbersWithLetters(password);
 
-        //debug purposes
-        if (internDebug == true) {
-          print("5 ${password.length}");
-          print("change number with letters ^^: ");
-        }
-      } else {
-        password = removeNumbersWithSpecChar(password);
-
-        //debug purposes
-        if (internDebug == true) {
-          print("6 ${password.length}");
-          print("change numbers with special characters  ^^: ");
+    String removeDuplicateChars(String str) {
+      StringBuffer sb = StringBuffer();
+      for (int i = 0; i < str.length; i++) {
+        if (i == 0 || str[i] != str[i - 1]) {
+          sb.write(str[i]);
         }
       }
-    }
-    if (internDebug == true) {
-      //debug purposes
-      print("7 ${password.length}");
-      print(password);
-    }
-    if (capLettersSwitch == true) {
-      password = camelCase(password);
-      bool containsUppercase = hasUppercase(password);
-      if (containsUppercase == false) {
-        password = capitalizeFirstAndLast(password);
-      }
-    }
-    if (internDebug == true) {
-      //debug purposes
-      print("8 ${password.length}");
-      print("upper case and lower case");
-      print(password);
-    }
-    if (hasLowerAndUpperCase(password) == false &&
-        hasLetters(password) == true) {
-      if (internDebug == true) {
-        //debug purposes
-        print(
-            "hasLowerAndUpperCase(password) == false hasLetters(password) == true)");
-        print("currentSliderValue.toInt()");
-        print("findFirstLetterPosition(password)");
-        print("$currentSliderValue       ${findFirstLetterPosition(password)}");
-      }
+      return sb.toString();
     }
 
-    if (capLettersSwitch == false) {
-      password = password.toLowerCase();
+    StringBuffer sb = StringBuffer();
+
+    var hash = vsha512('!$aliasText@$secretText#');
+    var encodedHash = encodeHash(hash);
+
+    var reversedHash = encodedHash.split('').reversed.join();
+
+    int minLength = encodedHash.length < reversedHash.length
+        ? encodedHash.length
+        : reversedHash.length;
+    for (int i = 0; i < minLength; i++) {
+      sb.write(encodedHash[i]);
+      sb.write(reversedHash[i]);
     }
 
-    password = password.substring(0, currentSliderValue.toInt());
-
-//debug purposes
-    if (internDebug == true) {
-      print("10 ${password.length}");
-      print("senha final:");
-      print(password);
+    if (encodedHash.length > minLength) {
+      sb.write(encodedHash.substring(minLength));
+    } else if (reversedHash.length > minLength) {
+      sb.write(reversedHash.substring(minLength));
     }
-    return password;
+
+    password = removeDuplicateChars(sb.toString());
+
+    String removeNumbers(String str) {
+      return str.replaceAll(RegExp(r'[0-9]'), '');
+    }
+
+    String removeLetter(String str) {
+      return str.replaceAll(RegExp(r'[a-zA-Z]'), '');
+    }
+
+    String removeSpecChar(String str) {
+      return str.replaceAll(RegExp(r'[!@#\$%^&*()_+\-=\[\]{};]'), '');
+    }
+
+    if (lettersSwitch == false) password = removeLetter(password);
+    if (numberSwitch == false) password = removeNumbers(password);
+    if (speCharSwitch == false) password = removeSpecChar(password);
+    if (capLettersSwitch == false) password = password.toLowerCase();
+
+    print(password.substring(0, currentSliderValue));
+
+    return password.substring(
+        0, currentSliderValue); //mensagem do sem senha, ou sei la
   }
 
   int securityLevel(int secPwValue) {
@@ -1337,6 +1061,41 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
     return textDynamicSize;
   }
 
+  bool _loading = false;
+
+  Future<void> copyToClipboard() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+
+    setState(() => _loading = true);
+
+    bool dataWasHiddenForAndroidAPI33;
+    String text;
+
+    try {
+      dataWasHiddenForAndroidAPI33 = await SensitiveClipboard.copy(
+        textNoPass(),
+        hideContent: true,
+      );
+      text = 'Successfully copied to Clipboard!';
+    } on PlatformException {
+      text = 'Ops! Something went wrong.';
+      dataWasHiddenForAndroidAPI33 = false;
+    }
+
+    if (!mounted) return;
+
+    if (!dataWasHiddenForAndroidAPI33) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(text),
+        ),
+      );
+    }
+
+    setState(() => _loading = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     final focusNode = FocusNode();
@@ -1385,7 +1144,8 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
                                 Padding(
                                   padding: const EdgeInsets.all(smallSpacing),
                                   child: TextField(
-                                    //controller: aliasController,
+                                    style:
+                                        const TextStyle(fontFamily: 'Ubuntu'),
                                     onChanged: (String value) {
                                       if (value.isEmpty || value == "") {
                                         aliasValidator = false;
@@ -1413,7 +1173,8 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
                                 Padding(
                                   padding: const EdgeInsets.all(smallSpacing),
                                   child: TextField(
-                                    controller: secretController,
+                                    style:
+                                        const TextStyle(fontFamily: 'Ubuntu'),
                                     onChanged: (String value) {
                                       if (value.isEmpty || value == "") {
                                         secretValidator = false;
@@ -1578,21 +1339,12 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
                                                   padding:
                                                       const EdgeInsets.only(
                                                           right: 5),
-                                                  child: ElevatedButton.icon(
-                                                      onPressed: aliasValidator ==
-                                                                  false &&
-                                                              secretValidator ==
-                                                                  false
-                                                          ? null
-                                                          : () => Clipboard.setData(
-                                                              ClipboardData(
-                                                                  text:
-                                                                      textNoPass())),
-                                                      icon: const Icon(
-                                                        Icons.copy,
-                                                      ),
-                                                      label:
-                                                          const Text('Copy')),
+                                                  child: ElevatedButton(
+                                                    onPressed: _loading
+                                                        ? null
+                                                        : copyToClipboard,
+                                                    child: const Text('Copy'),
+                                                  ),
                                                 )
                                               ],
                                             )
@@ -1891,21 +1643,30 @@ class _NavigationBarsState extends State<NavigationBars> {
   }
 
   @override
+  void didUpdateWidget(covariant NavigationBars oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedIndex != oldWidget.selectedIndex) {
+      selectedIndex = widget.selectedIndex;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     // App NavigationBar should get first focus.
     Widget navigationBar = Focus(
+      autofocus: true,
       child: NavigationBar(
         selectedIndex: selectedIndex,
         onDestinationSelected: (index) {
           setState(() {
             selectedIndex = index;
           });
+          widget.onSelectItem!(index);
         },
         destinations: appBarDestinations,
       ),
     );
 
-    ComponentDecoration(child: navigationBar);
     return navigationBar;
   }
 }
