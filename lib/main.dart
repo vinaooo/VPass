@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, no_leading_underscores_for_local_identifiers
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -11,6 +11,7 @@ import 'package:crypto/crypto.dart';
 import 'package:convert/convert.dart';
 import 'dart:convert';
 import 'package:sensitive_clipboard/sensitive_clipboard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const double narrowScreenWidthThreshold = 450;
 const double mediumWidthBreakpoint = 800;
@@ -28,8 +29,7 @@ enum ColorSeed {
   yellow('Yellow', Colors.yellow),
   orange('Orange', Colors.orange),
   deepOrange('Deep Orange', Colors.deepOrange),
-  pink('Pink', Colors.pink),
-  white('White', Colors.white);
+  pink('Pink', Colors.pink);
 
   const ColorSeed(this.label, this.color);
   final String label;
@@ -64,8 +64,18 @@ class Vpass extends StatefulWidget {
 }
 
 class _VpassState extends State<Vpass> {
+  String localThemeBrightness = '';
+  bool appStartedNow = false;
+  bool useMaterial3 = true;
+  ThemeMode themeMode = ThemeMode.system;
+  ColorSeed colorSelected = ColorSeed.baseColor;
+
+  bool isSaved = false;
+  String themeBrightness = '';
+
   void handleBrightnessChange(bool useLightMode) {
     setState(() {
+      print('handleBrightnessChange:     $useLightMode');
       themeMode = useLightMode ? ThemeMode.light : ThemeMode.dark;
     });
   }
@@ -82,15 +92,47 @@ class _VpassState extends State<Vpass> {
     });
   }
 
-  bool useMaterial3 = true;
-  ThemeMode themeMode = ThemeMode.system;
-  ColorSeed colorSelected = ColorSeed.baseColor;
+  @override
+  void initState() {
+    super.initState();
+    savedConfigs();
+  }
+
+  void savedConfigs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    var _themeBrightness = prefs.getString('themeBrightness');
+    if (_themeBrightness != null) {
+      setState(() {
+        isSaved = true;
+        print('conseguiu ler');
+        themeBrightness = _themeBrightness.toString();
+        print(themeBrightness);
+      });
+    }
+  }
+
+  Future<void> notSaved() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('themeBrightness', '');
+
+    setState(() {
+      themeBrightness = '';
+      isSaved = false;
+    });
+  }
+
+//para fazer o modo do sistema eu tenho que salvar um terceiro
+//modo em prefs.setString e então fazer isso ser igual ao valor
+//do sistema que está em
+//bool -> SchedulerBinding .instance.platformDispatcher.platformBrightness == Brightness.light;
 
   bool get useLightMode {
     switch (themeMode) {
       case ThemeMode.system:
-        return SchedulerBinding
-                .instance.platformDispatcher.platformBrightness ==
+        return SchedulerBinding //SystemMode
+                .instance
+                .platformDispatcher
+                .platformBrightness ==
             Brightness.light;
       case ThemeMode.light:
         return true;
@@ -105,6 +147,12 @@ class _VpassState extends State<Vpass> {
     return MaterialApp(
       title: 'VPass 7',
       themeMode: themeMode,
+      // isSaved == true && themeBrightness == '1' //ainda nao tenho certeza
+      //     ? ThemeMode.light
+      //     : isSaved == true && themeBrightness == '0'
+      //         ? ThemeMode.dark
+      //         : themeMode,
+      //themeMode,
       theme: ThemeData(
         colorSchemeSeed: colorSelected.color,
         useMaterial3: useMaterial3,
@@ -116,8 +164,16 @@ class _VpassState extends State<Vpass> {
         brightness: Brightness.dark,
       ),
       home: Home(
-        useLightMode: useLightMode,
-        useMaterial3: useMaterial3,
+        useLightMode: 
+        // isSaved == true && themeBrightness == '1'
+        //     ? true
+        //     : isSaved == true && themeBrightness == '0'
+        //         ? false
+        //         : useLightMode,
+
+                useLightMode,
+                useMaterial3
+                : useMaterial3,
         colorSelected: colorSelected,
         handleBrightnessChange: handleBrightnessChange,
         handleMaterialVersionChange: handleMaterialVersionChange,
@@ -603,6 +659,23 @@ class BottomSheetSection extends StatefulWidget {
 
 class _BottomSheetSectionState extends State<BottomSheetSection> {
   bool isNonModalBottomSheetOpen = false;
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   savedConfigs();
+  // }
+
+  // bool isSaved = false;
+  String saveThemeBrightness = '';
+  String bsThemeBrightness = '';
+
+  Future<void> saveConfigs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('themeBrightness', saveThemeBrightness);
+    setState(() {
+      bsThemeBrightness = saveThemeBrightness;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -610,18 +683,27 @@ class _BottomSheetSectionState extends State<BottomSheetSection> {
     List<Widget> themeButtonList = <Widget>[
       IconButton(
           icon: const Icon(Icons.light_mode_outlined),
-          onPressed: () => widget.handleBrightnessChange(true)),
+          onPressed: () {
+            widget.handleBrightnessChange(true);
+            saveThemeBrightness = '1';
+            saveConfigs();
+          }),
       IconButton(
         //copia aqui
         icon: const Icon(Icons.dark_mode),
-        onPressed: () => widget.handleBrightnessChange(false),
+        onPressed: () {
+          widget.handleBrightnessChange(false);
+          saveThemeBrightness = '0';
+          saveConfigs();
+        },
       ),
       IconButton(
           onPressed: () {
             showDialog<void>(
               context: context,
               builder: (context) => AlertDialog(
-                content: const Text('Sorry this is not implemented'),
+                content: const Text(
+                    'Sorry this is not implemented, maybe never will'),
                 actions: <Widget>[
                   FilledButton(
                     child: const Text('Dismiss'),
@@ -664,9 +746,6 @@ class _BottomSheetSectionState extends State<BottomSheetSection> {
       IconButton(
           onPressed: () => widget.handleColorSelect(8),
           icon: const Icon(Icons.circle, color: Colors.pink)),
-      IconButton(
-          onPressed: () => widget.handleColorSelect(9),
-          icon: const Icon(Icons.circle, color: Colors.white)),
     ];
     List<Text> themeLabelList = const <Text>[
       Text('Light'),
@@ -683,7 +762,6 @@ class _BottomSheetSectionState extends State<BottomSheetSection> {
       Text('Orange'),
       Text('Deep Orange'),
       Text('Pink'),
-      Text('White'),
     ];
 
     themeButtonList = List.generate(
