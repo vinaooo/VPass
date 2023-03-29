@@ -1,9 +1,9 @@
-// ignore_for_file: avoid_print, no_leading_underscores_for_local_identifiers
+// ignore_for_file: avoid_print,
 
+import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:desktop_window/desktop_window.dart';
-import 'package:dynamic_color/dynamic_color.dart';
 import 'dart:core';
 import 'dart:io' show Platform;
 import 'package:flutter/services.dart';
@@ -21,15 +21,15 @@ const smallSpacing = 10.0;
 const double widthConstraint = 450;
 
 enum ColorSeed {
-  baseColor('M3 Baseline', Color(0xff6750a4)),
-  indigo('Indigo', Colors.indigo),
-  blue('Blue', Colors.blue),
-  teal('Teal', Colors.teal),
-  green('Green', Colors.green),
-  yellow('Yellow', Colors.yellow),
-  orange('Orange', Colors.orange),
+  baseColor ('M3 Baseline', Color(0xff6750a4)),
+  indigo    ('Indigo', Colors.indigo),
+  blue      ('Blue', Colors.blue),
+  teal      ('Teal', Colors.teal),
+  green     ('Green', Colors.green),
+  yellow    ('Yellow', Colors.yellow),
+  orange    ('Orange', Colors.orange),
   deepOrange('Deep Orange', Colors.deepOrange),
-  pink('Pink', Colors.pink);
+  pink      ('Pink', Colors.pink);
 
   const ColorSeed(this.label, this.color);
   final String label;
@@ -53,6 +53,7 @@ void main() {
       Platform.isMacOS == true) {
     DesktopWindow.setMinWindowSize(const Size(460, 900));
   }
+  debugPaintSizeEnabled = false;
   WidgetsFlutterBinding.ensureInitialized();
 }
 
@@ -65,13 +66,52 @@ class Vpass extends StatefulWidget {
 
 class _VpassState extends State<Vpass> {
   String localThemeBrightness = '';
-  bool appStartedNow = false;
   bool useMaterial3 = true;
+
   ThemeMode themeMode = ThemeMode.system;
   ColorSeed colorSelected = ColorSeed.baseColor;
 
   bool isSaved = false;
-  String themeBrightness = '';
+  int themeBrightness = 2;
+
+  void savedConfigs() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var savedThemeBrightness = prefs.getInt('themeBrightness');
+
+    if (savedThemeBrightness != null) {
+      setState(
+        () {
+          isSaved = true;
+          print('conseguiu ler');
+          themeBrightness = savedThemeBrightness;
+          if (savedThemeBrightness == 0) {
+            themeMode = ThemeMode.dark;
+          }
+          if (savedThemeBrightness == 1) {
+            themeMode = ThemeMode.light;
+          }
+          if (savedThemeBrightness == 2) {
+            themeMode = ThemeMode.system;
+          }
+          print('Opção salva: $themeBrightness');
+        },
+      );
+    } else {
+      themeMode = ThemeMode.system;
+    }
+  }
+
+//para fazer o modo do sistema eu tenho que salvar um terceiro
+//modo em prefs.setString e então fazer isso ser igual ao valor
+//do sistema que está em
+//bool -> SchedulerBinding .instance.platformDispatcher.platformBrightness == Brightness.light;
+
+  @override
+  void initState() {
+    super.initState();
+    savedConfigs();
+  }
 
   void handleBrightnessChange(bool useLightMode) {
     setState(() {
@@ -92,53 +132,40 @@ class _VpassState extends State<Vpass> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    savedConfigs();
-  }
-
-  void savedConfigs() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    var _themeBrightness = prefs.getString('themeBrightness');
-    if (_themeBrightness != null) {
-      setState(() {
-        isSaved = true;
-        print('conseguiu ler');
-        themeBrightness = _themeBrightness.toString();
-        print(themeBrightness);
-      });
-    }
-  }
-
-  Future<void> notSaved() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('themeBrightness', '');
-
-    setState(() {
-      themeBrightness = '';
-      isSaved = false;
-    });
-  }
-
-//para fazer o modo do sistema eu tenho que salvar um terceiro
-//modo em prefs.setString e então fazer isso ser igual ao valor
-//do sistema que está em
-//bool -> SchedulerBinding .instance.platformDispatcher.platformBrightness == Brightness.light;
-
   bool get useLightMode {
-    switch (themeMode) {
-      case ThemeMode.system:
+//    savedConfigs();
+
+    switch (themeBrightness) {
+      case 0:
+        return false;
+      case 1:
+        return true;
+      case 2:
         return SchedulerBinding //SystemMode
                 .instance
                 .platformDispatcher
                 .platformBrightness ==
             Brightness.light;
-      case ThemeMode.light:
-        return true;
-      case ThemeMode.dark:
-        return false;
+      default:
+        return SchedulerBinding //SystemMode
+                .instance
+                .platformDispatcher
+                .platformBrightness ==
+            Brightness.light;
     }
+
+    // switch (themeMode) {
+    //   case ThemeMode.system:
+    //     return SchedulerBinding //SystemMode
+    //             .instance
+    //             .platformDispatcher
+    //             .platformBrightness ==
+    //         Brightness.light;
+    //   case ThemeMode.light:
+    //     return true;
+    //   case ThemeMode.dark:
+    //     return false;
+    // }
   }
 
 //gambiarra
@@ -164,16 +191,15 @@ class _VpassState extends State<Vpass> {
         brightness: Brightness.dark,
       ),
       home: Home(
-        useLightMode: 
-        // isSaved == true && themeBrightness == '1'
-        //     ? true
-        //     : isSaved == true && themeBrightness == '0'
-        //         ? false
-        //         : useLightMode,
+        useLightMode:
+            // isSaved == true && themeBrightness == '1'
+            //     ? true
+            //     : isSaved == true && themeBrightness == '0'
+            //         ? false
+            //         : useLightMode,
 
-                useLightMode,
-                useMaterial3
-                : useMaterial3,
+            useLightMode,
+        useMaterial3: useMaterial3,
         colorSelected: colorSelected,
         handleBrightnessChange: handleBrightnessChange,
         handleMaterialVersionChange: handleMaterialVersionChange,
@@ -659,19 +685,13 @@ class BottomSheetSection extends StatefulWidget {
 
 class _BottomSheetSectionState extends State<BottomSheetSection> {
   bool isNonModalBottomSheetOpen = false;
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   savedConfigs();
-  // }
 
-  // bool isSaved = false;
-  String saveThemeBrightness = '';
-  String bsThemeBrightness = '';
+  int saveThemeBrightness = 2;
+  int bsThemeBrightness = 2;
 
   Future<void> saveConfigs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('themeBrightness', saveThemeBrightness);
+    prefs.setInt('themeBrightness', saveThemeBrightness);
     setState(() {
       bsThemeBrightness = saveThemeBrightness;
     });
@@ -685,7 +705,7 @@ class _BottomSheetSectionState extends State<BottomSheetSection> {
           icon: const Icon(Icons.light_mode_outlined),
           onPressed: () {
             widget.handleBrightnessChange(true);
-            saveThemeBrightness = '1';
+            saveThemeBrightness = 1;
             saveConfigs();
           }),
       IconButton(
@@ -693,7 +713,7 @@ class _BottomSheetSectionState extends State<BottomSheetSection> {
         icon: const Icon(Icons.dark_mode),
         onPressed: () {
           widget.handleBrightnessChange(false);
-          saveThemeBrightness = '0';
+          saveThemeBrightness = 0;
           saveConfigs();
         },
       ),
@@ -1064,7 +1084,6 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
     return internSecurityLevel;
   }
 
-  //print("$aliasValidator     $secretValidator");
   String textNoPass() {
     if (aliasText != "" || secretText != "") {
       return pwValue(aliasText, secretText);
