@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'dart:core';
 import 'package:flutter/scheduler.dart';
@@ -27,6 +28,66 @@ class _SettingsScreenState extends State<SettingsScreen> {
           BottomSheetSection(
               handleBrightnessChange: widget.handleBrightnessChange,
               handleColorSelect: widget.handleColorSelect),
+          const OptionsSection()
+        ],
+      ),
+    );
+  }
+}
+
+class OptionsSection extends StatefulWidget {
+  const OptionsSection({super.key});
+
+  @override
+  State<OptionsSection> createState() => _OptionsSectionState();
+}
+
+class _OptionsSectionState extends State<OptionsSection> {
+  bool debugMode = true;
+  bool printScreen = false;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return ComponentDecoration(
+      child: Wrap(
+        alignment: WrapAlignment.spaceEvenly,
+        children: [
+          Column(
+            children: <Widget>[
+              const Padding(
+                padding: EdgeInsets.fromLTRB(16, 8, 0, 0),
+                child: Row(
+                  children: [
+                    Text('Options'),
+                  ],
+                ),
+              ),
+              const CheckboxListTile(
+                title: Text('Hide password'),
+                value: true,
+                secondary: Icon(Icons.screenshot),
+                onChanged: null,
+              ),
+              CheckboxListTile(
+                title: const Text('Debug mode'),
+                value: debugMode,
+                secondary: const Icon(Icons.bug_report),
+                onChanged: null,
+              ),
+              CheckboxListTile(
+                title: const Text('Show ads'),
+                value: debugMode,
+                secondary: Transform.rotate(
+                  angle: pi,
+                  child: const Icon(
+                    Icons.ad_units,
+                  ),
+                ),
+                onChanged: null,
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -48,6 +109,8 @@ class BottomSheetSection extends StatefulWidget {
 
 class _BottomSheetSectionState extends State<BottomSheetSection> {
   bool isNonModalBottomSheetOpen = false;
+
+  var themeData = ThemeData();
 
   int saveThemeBrightness = 2;
   int bsThemeBrightness = 2;
@@ -76,7 +139,6 @@ class _BottomSheetSectionState extends State<BottomSheetSection> {
             saveConfigs();
           }),
       IconButton(
-        //copia aqui
         icon: const Icon(Icons.dark_mode),
         onPressed: () {
           widget.handleBrightnessChange(false);
@@ -90,8 +152,6 @@ class _BottomSheetSectionState extends State<BottomSheetSection> {
                     .instance.platformDispatcher.platformBrightness ==
                 Brightness.light);
             saveThemeBrightness = 2;
-
-            ///systemdefaults
             saveConfigs();
           },
           icon: const Icon(Icons.brightness_4_outlined)),
@@ -103,7 +163,10 @@ class _BottomSheetSectionState extends State<BottomSheetSection> {
             saveAccentColor = 0;
             saveConfigs();
           },
-          icon: const Icon(Icons.circle, color: Color(0xff6750a4))),
+          icon: const Icon(
+            Icons.circle,
+            color: Color(0xff6750a4),
+          )),
       IconButton(
           onPressed: () {
             widget.handleColorSelect(1);
@@ -174,35 +237,28 @@ class _BottomSheetSectionState extends State<BottomSheetSection> {
       Text('Green'),
       Text('Yellow'),
       Text('Orange'),
-      Text('Deep \nOrange',
-      textAlign: TextAlign.center),
+      Text('Deep \nOrange', textAlign: TextAlign.center),
       Text('Pink'),
     ];
 
     themeButtonList = List.generate(
         themeButtonList.length,
-        (index) => Padding(
-              padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  themeButtonList[index],
-                  themeLabelList[index],
-                ],
-              ),
+        (index) => Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                themeButtonList[index],
+                themeLabelList[index],
+              ],
             ));
 
     accentButtonList = List.generate(
         accentButtonList.length,
-        (index) => Padding(
-              padding: const EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  accentButtonList[index],
-                  accentLabelList[index],
-                ],
-              ),
+        (index) => Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                accentButtonList[index],
+                accentLabelList[index],
+              ],
             ));
     return ComponentDecoration(
       child: Wrap(
@@ -238,18 +294,40 @@ class _BottomSheetSectionState extends State<BottomSheetSection> {
                         onPressed: () {
                           showModalBottomSheet<void>(
                             context: context,
-                            constraints: const BoxConstraints(maxWidth: 640),
+                            constraints: const BoxConstraints(
+                              maxWidth: 640,
+                              minWidth: 300,
+                              maxHeight: 200,
+                            ),
                             builder: (context) {
-                              return SizedBox(
-                                height: 121,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: ListView(
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    children: themeButtonList,
-                                  ),
+                              return FractionallySizedBox(
+                                widthFactor: 0.7,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    const Row(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.fromLTRB(30, 10, 0, 0),
+                                          child: Text(
+                                            'Pick a theme:',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    GridView.count(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          10, 0, 10, 0),
+                                      shrinkWrap: true,
+                                      crossAxisCount: 3,
+                                      children: themeButtonList,
+                                    ),
+                                  ],
                                 ),
                               );
                             },
@@ -272,43 +350,50 @@ class _BottomSheetSectionState extends State<BottomSheetSection> {
                         onPressed: () {
                           showModalBottomSheet<void>(
                             context: context,
-                            constraints: const BoxConstraints(maxWidth: 640),
+                            constraints: const BoxConstraints(
+                              maxWidth: 640,
+                              minWidth: 300,
+                              maxHeight: 500,
+                            ),
                             builder: (context) {
-                              return SizedBox(
+                              return FractionallySizedBox(
+                                widthFactor: 0.7,
                                 child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                      child: SizedBox(
-                                        height: 121,
-                                        child: ListView(
-                                          shrinkWrap: true,
-                                          scrollDirection: Axis.horizontal,
-                                          children: accentButtonList.sublist(0,3),
+                                    const Row(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.fromLTRB(30, 10, 0, 0),
+                                          child: Text(
+                                            'Pick an accent color:',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 16),
+                                          ),
                                         ),
-                                      ),
+                                      ],
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                      child: SizedBox(
-                                        height: 121,
-                                        child: ListView(
-                                          shrinkWrap: true,
-                                          scrollDirection: Axis.horizontal,
-                                          children: accentButtonList.sublist(3,6),
-                                        ),
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 10, 0, 0),
+                                      child: FilledButton(
+                                        onPressed: () {
+                                          widget.handleColorSelect(10);
+                                          saveAccentColor = 10;
+                                          saveConfigs();
+                                        },
+                                        child: const Text('System Color'),
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                      child: SizedBox(
-                                        height: 130,
-                                        child: ListView(
-                                          shrinkWrap: true,
-                                          scrollDirection: Axis.horizontal,
-                                          children: accentButtonList.sublist(6,9),
-                                        ),
-                                      ),
+                                    GridView.count(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          10, 0, 10, 0),
+                                      shrinkWrap: true,
+                                      crossAxisCount: 3,
+                                      children: accentButtonList,
                                     ),
                                   ],
                                 ),

@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print,
 
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -7,13 +8,12 @@ import 'package:desktop_window/desktop_window.dart';
 import 'dart:core';
 import 'dart:io' show Platform;
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'globals.dart';
 import 'home.dart';
 
-void main() {
+void main() async {
   runApp(
     const Vpass(),
   );
@@ -27,15 +27,24 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 }
 
+
+
 class Vpass extends StatefulWidget {
   const Vpass({super.key});
 
   @override
   State<Vpass> createState() => _VpassState();
+
+  //  void initState() {
+  //     secureScreen();
+  //     super.initState();
+  //  }
+
+  //  void dispose(){
+  //     super.dispose();
+  //     await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+  //  }
 }
-
-
-
 
 class _VpassState extends State<Vpass> {
   String localThemeBrightness = '';
@@ -46,18 +55,19 @@ class _VpassState extends State<Vpass> {
 
   bool isSaved = false;
   int themeBrightness = 2;
+  int localAccentColor = 10;
 
   void savedConfigs() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     var savedThemeBrightness = prefs.getInt('themeBrightness');
-    var savedAccentColor = prefs.getInt('accentColor');
+    int? savedAccentColor = prefs.getInt('accentColor');
+    localAccentColor = savedAccentColor ?? 10;
 
     if (savedThemeBrightness != null) {
       setState(
         () {
           isSaved = true;
-          print('conseguiu ler');
           themeBrightness = savedThemeBrightness;
           if (savedThemeBrightness == 0) {
             themeMode = ThemeMode.dark;
@@ -98,7 +108,6 @@ class _VpassState extends State<Vpass> {
           if (savedAccentColor == 9) {
             colorSelected = ColorSeed.values[9];
           }
-          print('Opção salva: $themeBrightness');
         },
       );
     } else {
@@ -126,9 +135,15 @@ class _VpassState extends State<Vpass> {
   }
 
   void handleColorSelect(int value) {
-    setState(() {
-      colorSelected = ColorSeed.values[value];
-    });
+    setState(
+      () {
+        if (value != 10) {
+          colorSelected = ColorSeed.values[value];
+        } else {
+          localAccentColor = 10;
+        }
+      },
+    );
   }
 
   bool get useLightMode {
@@ -154,27 +169,32 @@ class _VpassState extends State<Vpass> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'VPass 7',
-      themeMode: themeMode,
-      theme: ThemeData(
-        colorSchemeSeed: colorSelected.color,
-        useMaterial3: useMaterial3,
-        brightness: Brightness.light,
-      ),
-      darkTheme: ThemeData(
-        colorSchemeSeed: colorSelected.color,
-        useMaterial3: useMaterial3,
-        brightness: Brightness.dark,
-      ),
-      home: Home(
-        useLightMode: useLightMode,
-        useMaterial3: useMaterial3,
-        colorSelected: colorSelected,
-        handleBrightnessChange: handleBrightnessChange,
-        handleMaterialVersionChange: handleMaterialVersionChange,
-        handleColorSelect: handleColorSelect,
-      ),
-    );
+    return DynamicColorBuilder(
+        builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+      return MaterialApp(
+        title: 'VPass 7',
+        themeMode: themeMode,
+        theme: ThemeData(
+          colorSchemeSeed: localAccentColor != 10 ? colorSelected.color : null,
+          colorScheme: localAccentColor == 10 ? lightDynamic : null,
+          useMaterial3: useMaterial3,
+          brightness: Brightness.light,
+        ),
+        darkTheme: ThemeData(
+          colorSchemeSeed: localAccentColor != 10 ? colorSelected.color : null,
+          colorScheme: localAccentColor == 10 ? darkDynamic : null,
+          useMaterial3: useMaterial3,
+          brightness: Brightness.dark,
+        ),
+        home: Home(
+          useLightMode: useLightMode,
+          useMaterial3: useMaterial3,
+          colorSelected: colorSelected,
+          handleBrightnessChange: handleBrightnessChange,
+          handleMaterialVersionChange: handleMaterialVersionChange,
+          handleColorSelect: handleColorSelect,
+        ),
+      );
+    });
   }
 }

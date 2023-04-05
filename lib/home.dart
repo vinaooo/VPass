@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:core';
 import 'dart:io' show Platform;
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'settings.dart';
 import 'generator.dart';
@@ -180,11 +180,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     );
   }
 
-  Future<InitializationStatus> _initGoogleMobileAds() {
-    // ignore: todo
-    // TODO: Initialize Google Mobile Ads SDK
-    return MobileAds.instance.initialize();
-  }
+  // Future<InitializationStatus> _initGoogleMobileAds() {
+  // ignore: todo
+  //   // TODO: Initialize Google Mobile Ads SDK
+  //   return MobileAds.instance.initialize();
+  // }
 }
 
 class ComponentDecoration extends StatefulWidget {

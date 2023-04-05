@@ -6,7 +6,7 @@ import 'dart:core';
 import 'package:crypto/crypto.dart';
 import 'package:convert/convert.dart';
 import 'dart:convert';
-// import 'dart:io' show Platform;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'ad_helper.dart';
@@ -313,7 +313,12 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
         },
       ),
     ).load();
+
+    aliasObscure = false;
   }
+
+  bool aliasObscure = false;
+  bool secretObscure = false;
 
   @override
   Widget build(BuildContext context) {
@@ -363,8 +368,11 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
                                 Padding(
                                   padding: const EdgeInsets.all(smallSpacing),
                                   child: TextField(
-                                    style:
-                                        const TextStyle(fontFamily: 'Ubuntu'),
+                                    obscureText: aliasObscure,
+                                    style: const TextStyle(
+                                      fontFamily: 'Ubuntu',
+                                      decorationThickness: 0,
+                                    ),
                                     onChanged: (String value) {
                                       if (value.isEmpty || value == "") {
                                         aliasValidator = false;
@@ -379,21 +387,39 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
                                             lettersSwitch == false
                                         ? false
                                         : true,
-                                    decoration: const InputDecoration(
+                                    decoration: InputDecoration(
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                          aliasObscure == true
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            aliasObscure = !aliasObscure;
+                                          });
+                                        },
+                                      ),
                                       labelText: 'Alias *',
                                       hintText: "Enter an alias",
-                                      border: OutlineInputBorder(
+                                      border: const OutlineInputBorder(
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(12)),
                                       ),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 10.0, horizontal: 12),
                                     ),
                                   ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(smallSpacing),
                                   child: TextField(
-                                    style:
-                                        const TextStyle(fontFamily: 'Ubuntu'),
+                                    obscureText: true,
+                                    style: const TextStyle(
+                                      fontFamily: 'Ubuntu',
+                                      decorationThickness: 0,
+                                    ),
                                     onChanged: (String value) {
                                       if (value.isEmpty || value == "") {
                                         secretValidator = false;
@@ -408,12 +434,28 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
                                             lettersSwitch == false
                                         ? false
                                         : true,
-                                    decoration: const InputDecoration(
+                                    decoration: InputDecoration(
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                          secretObscure == true
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            secretObscure = !secretObscure;
+                                          });
+                                        },
+                                      ),
                                       labelText: 'Secret *',
-                                      border: OutlineInputBorder(
+                                      hintText: "Enter a secret",
+                                      border: const OutlineInputBorder(
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(12)),
                                       ),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 10.0, horizontal: 12),
                                     ),
                                   ),
                                 ),
@@ -532,8 +574,14 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
                                               alignment: Alignment.center,
                                               child: bannerAd != null
                                                   ? AdWidget(ad: bannerAd!)
-                                                  : const Text(
-                                                      'Fail to load adMob banner'),
+                                                  : Center(
+                                                      child:
+                                                          LoadingAnimationWidget
+                                                              .waveDots(
+                                                        color: Colors.yellow,
+                                                        size: 50,
+                                                      ),
+                                                    ),
                                             ),
                                             SizedBox(
                                               height: 150,
@@ -545,15 +593,14 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
                                                   ),
                                                 ),
                                                 subtitle: Text(textNoPass(),
-                                                    textAlign: aliasText ==
-                                                                "" &&
-                                                            secretText == ""
-                                                        ? TextAlign.center
-                                                        : TextAlign.justify,
+                                                    textAlign:
+                                                        aliasText == "" &&
+                                                                secretText == ""
+                                                            ? TextAlign.center
+                                                            : TextAlign.justify,
                                                     softWrap: true,
                                                     style: TextStyle(
-                                                      color: aliasText ==
-                                                                  "" &&
+                                                      color: aliasText == "" &&
                                                               secretText == ""
                                                           ? Colors.yellow
                                                           : Colors.white,
@@ -566,18 +613,21 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
                                               ),
                                             ),
                                             Padding(
-                                              padding: const EdgeInsets.all(8.0),
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
                                               child: Align(
-                                                alignment: Alignment.bottomRight,
+                                                alignment:
+                                                    Alignment.bottomRight,
                                                 heightFactor: 0,
-                                                child: FloatingActionButton.extended(
+                                                child: FloatingActionButton
+                                                    .extended(
                                                   onPressed: _loading
-                                                    ? null
-                                                    : copyToClipboard,
+                                                      ? null
+                                                      : copyToClipboard,
                                                   label: const Text('Copy'),
                                                   icon: const Icon(
                                                     Icons.copy,
-                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                             )
