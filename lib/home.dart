@@ -66,29 +66,36 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
     final double width = MediaQuery.of(context).size.width;
     final AnimationStatus status = controller.status;
-    if (width > mediumWidthBreakpoint) {
-      if (width > largeWidthBreakpoint) {
-        showMediumSizeLayout = false;
-        showLargeSizeLayout = true;
-      } else {
-        showMediumSizeLayout = true;
-        showLargeSizeLayout = false;
-      }
-      if (status != AnimationStatus.forward &&
-          status != AnimationStatus.completed) {
-        controller.forward();
-      }
-    } else {
+
+    if (systemIsDesktop == true) {
       showMediumSizeLayout = false;
-      showLargeSizeLayout = false;
-      if (status != AnimationStatus.reverse &&
-          status != AnimationStatus.dismissed) {
-        controller.reverse();
+      showLargeSizeLayout = true;
+      controller.value = 1;
+    } else {
+      if (width > mediumWidthBreakpoint) {
+        if (width > largeWidthBreakpoint) {
+          showMediumSizeLayout = false;
+          showLargeSizeLayout = true;
+        } else {
+          showMediumSizeLayout = true;
+          showLargeSizeLayout = false;
+        }
+        if (status != AnimationStatus.forward &&
+            status != AnimationStatus.completed) {
+          controller.forward();
+        }
+      } else {
+        showMediumSizeLayout = false;
+        showLargeSizeLayout = false;
+        if (status != AnimationStatus.reverse &&
+            status != AnimationStatus.dismissed) {
+          controller.reverse();
+        }
       }
-    }
-    if (!controllerInitialized) {
-      controllerInitialized = true;
-      controller.value = width > mediumWidthBreakpoint ? 1 : 0;
+      if (!controllerInitialized) {
+        controllerInitialized = true;
+        controller.value = width > mediumWidthBreakpoint ? 1 : 0;
+      }
     }
   }
 

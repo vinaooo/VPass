@@ -28,7 +28,137 @@ class _SettingsScreenState extends State<SettingsScreen> {
           BottomSheetSection(
               handleBrightnessChange: widget.handleBrightnessChange,
               handleColorSelect: widget.handleColorSelect),
-          const OptionsSection()
+          const OptionsSection(),
+          const OthersSection(),
+        ],
+      ),
+    );
+  }
+}
+
+class OthersSection extends StatefulWidget {
+  const OthersSection({super.key});
+
+  @override
+  State<OthersSection> createState() => _OthersSectionState();
+}
+
+class _OthersSectionState extends State<OthersSection> {
+  bool debugMode = true;
+  bool printScreen = false;
+
+  void _showDialog() {
+    showAboutDialog(
+        context: context,
+        applicationName: 'VPass',
+        applicationIcon: const FlutterLogo(),
+        applicationVersion: '0.1.a',
+        children: [
+          const Text('This is an About Dialog in Flutter'),
+        ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ComponentDecoration(
+      child: Wrap(
+        alignment: WrapAlignment.spaceEvenly,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+            child: Column(
+              children: <Widget>[
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(16, 8, 0, 0),
+                  child: Row(
+                    children: [
+                      Text('Others'),
+                    ],
+                  ),
+                ),
+                ListTile(
+                  title: const Text('About'),
+                  onTap: _showDialog,
+                ),
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(16, 8, 0, 0),
+                  child: Row(
+                    children: [
+                      Text('Collaborate'),
+                    ],
+                  ),
+                ),
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Text(
+                              'Pay me a coffee',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            onPressed: () {},
+                          ),
+                          OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Text(
+                              'Pay me a beer',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            onPressed: () {},
+                          ),
+                          OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Text(
+                              'Translate',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: const Text(
+                              'Pay my children a xbox game',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -45,7 +175,6 @@ class OptionsSection extends StatefulWidget {
 class _OptionsSectionState extends State<OptionsSection> {
   bool debugMode = true;
   bool printScreen = false;
-
 
   @override
   Widget build(BuildContext context) {
@@ -281,8 +410,8 @@ class _BottomSheetSectionState extends State<BottomSheetSection> {
                   children: [
                     SizedBox(
                       width: 140,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -337,8 +466,8 @@ class _BottomSheetSectionState extends State<BottomSheetSection> {
                     ),
                     SizedBox(
                       width: 140,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),

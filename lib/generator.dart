@@ -8,6 +8,7 @@ import 'package:convert/convert.dart';
 import 'dart:convert';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'dart:io' show Platform;
 
 import 'ad_helper.dart';
 import 'clipboard.dart';
@@ -62,7 +63,7 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
   String aliasText = "";
   String secretText = "";
 
-  bool internDebug = true; //put true for debug messages in console
+  bool internDebug = false; //put true for debug messages in console
   bool speCharSwitch = true;
 
   bool numberSwitch = true;
@@ -149,7 +150,7 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
     if (speCharSwitch == false) password = removeSpecChar(password);
     if (capLettersSwitch == false) password = password.toLowerCase();
 
-    print(password.substring(0, currentSliderValue));
+    //print(password.substring(0, currentSliderValue));
 
     return password.substring(
         0, currentSliderValue); //mensagem do sem senha, ou sei la
@@ -293,27 +294,26 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
   @override
   void initState() {
     super.initState();
-
-    // ignore: todo
-    // TODO: Load a banner ad
-    BannerAd(
-      adUnitId: AdHelper.bannerAdUnitId,
-      size: AdSize.banner,
-      request: const AdRequest(),
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          setState(() {
-            bannerAd = ad as BannerAd;
-          });
-        },
-        onAdFailedToLoad: (ad, error) {
-          // Releases an ad resource when it fails to load
-          ad.dispose();
-          print('Ad load failed (code=${error.code} message=${error.message})');
-        },
-      ),
-    ).load();
-
+    if (Platform.isAndroid == true) {
+      BannerAd(
+        adUnitId: AdHelper.bannerAdUnitId,
+        size: AdSize.banner,
+        request: const AdRequest(),
+        listener: BannerAdListener(
+          onAdLoaded: (ad) {
+            setState(() {
+              bannerAd = ad as BannerAd;
+            });
+          },
+          onAdFailedToLoad: (ad, error) {
+            // Releases an ad resource when it fails to load
+            ad.dispose();
+            print(
+                'Ad load failed (code=${error.code} message=${error.message})');
+          },
+        ),
+      ).load();
+    }
     aliasObscure = false;
   }
 
@@ -402,10 +402,12 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
                                       ),
                                       labelText: 'Alias *',
                                       hintText: "Enter an alias",
+                                      filled: true,
                                       border: const OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(12)),
-                                      ),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(12)),
+                                          borderSide:
+                                              BorderSide(color: Colors.red)),
                                       contentPadding:
                                           const EdgeInsets.symmetric(
                                               vertical: 10.0, horizontal: 12),
@@ -568,19 +570,23 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
                                             Container(
-                                              width: bannerAd?.size.width
-                                                  .toDouble(),
+                                              width: Platform.isAndroid
+                                                  ? bannerAd?.size.width
+                                                      .toDouble()
+                                                  : 200,
                                               height: 72.0,
                                               alignment: Alignment.center,
                                               child: bannerAd != null
                                                   ? AdWidget(ad: bannerAd!)
                                                   : Center(
-                                                      child:
-                                                          LoadingAnimationWidget
+                                                      child: Platform.isAndroid
+                                                          ? LoadingAnimationWidget
                                                               .waveDots(
-                                                        color: Colors.yellow,
-                                                        size: 50,
-                                                      ),
+                                                              color:
+                                                                  Colors.yellow,
+                                                              size: 50,
+                                                            )
+                                                          : null,
                                                     ),
                                             ),
                                             SizedBox(

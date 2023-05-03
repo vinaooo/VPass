@@ -20,30 +20,21 @@ void main() async {
   if (Platform.isLinux == true ||
       Platform.isWindows == true ||
       Platform.isMacOS == true) {
-    DesktopWindow.setMinWindowSize(const Size(460, 900));
+    systemIsDesktop = true;
+    DesktopWindow.setWindowSize(const Size(784, 850));
+    DesktopWindow.setMinWindowSize(const Size(784, 820));
+  } else {
+    systemIsDesktop == false;
   }
   MobileAds.instance.initialize();
-  debugPaintSizeEnabled = false;
   WidgetsFlutterBinding.ensureInitialized();
 }
-
-
 
 class Vpass extends StatefulWidget {
   const Vpass({super.key});
 
   @override
   State<Vpass> createState() => _VpassState();
-
-  //  void initState() {
-  //     secureScreen();
-  //     super.initState();
-  //  }
-
-  //  void dispose(){
-  //     super.dispose();
-  //     await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
-  //  }
 }
 
 class _VpassState extends State<Vpass> {
@@ -123,7 +114,7 @@ class _VpassState extends State<Vpass> {
 
   void handleBrightnessChange(bool useLightMode) {
     setState(() {
-      print('handleBrightnessChange:     $useLightMode');
+      //print('handleBrightnessChange:     $useLightMode');
       themeMode = useLightMode ? ThemeMode.light : ThemeMode.dark;
     });
   }
