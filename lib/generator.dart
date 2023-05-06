@@ -252,12 +252,29 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
     return textDynamicSize;
   }
 
-  bool _loading = false;
-
+  //bool _loading = false;
+void temporaryFunction() {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text("Temporary Function"),
+      content: Text("This is a temporary function. The copyToClipboard function should be called here instead."),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text("OK"),
+        ),
+      ],
+    ),
+  );
+}
   Future<void> copyToClipboard() async {
-    FocusManager.instance.primaryFocus?.unfocus();
+    print('aqui');
+    //FocusManager.instance.primaryFocus?.unfocus();
 
-    setState(() => _loading = true);
+    //setState(() => _loading = true);
 
     bool dataWasHiddenForAndroidAPI33;
     String text;
@@ -287,7 +304,7 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
       );
     }
 
-    setState(() => _loading = false);
+    //setState(() => _loading = false);
   }
 
   BannerAd? bannerAd;
@@ -627,10 +644,10 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
                                                 heightFactor: 0,
                                                 child: FloatingActionButton
                                                     .extended(
-                                                  onPressed: _loading
-                                                      ? null
-                                                      : copyToClipboard,
-                                                  label: const Text('Copy'),
+                                                  onPressed: (){ 
+                                                    //copyToClipboard();
+                                                    temporaryFunction();},
+                                                  label: const Text('Cofgdfspy'),
                                                   icon: const Icon(
                                                     Icons.copy,
                                                   ),

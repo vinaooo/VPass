@@ -1,14 +1,13 @@
 // ignore_for_file: avoid_print,
 
 import 'package:dynamic_color/dynamic_color.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:desktop_window/desktop_window.dart';
 import 'dart:core';
 import 'dart:io' show Platform;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+//import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'globals.dart';
 import 'home.dart';
@@ -26,7 +25,7 @@ void main() async {
   } else {
     systemIsDesktop == false;
   }
-  MobileAds.instance.initialize();
+//  MobileAds.instance.initialize();
   WidgetsFlutterBinding.ensureInitialized();
 }
 
