@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.vpass_7">
     <application
-        android:label="vpass_7"
+        android:label="VPass"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

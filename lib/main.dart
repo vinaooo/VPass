@@ -7,26 +7,29 @@ import 'package:desktop_window/desktop_window.dart';
 import 'dart:core';
 import 'dart:io' show Platform;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:adwaita/adwaita.dart';
 //import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'globals.dart';
 import 'home.dart';
+import 'version.dart';
+//import 'ad_helper.dart';
 
 void main() async {
-  runApp(
-    const Vpass(),
-  );
-  if (Platform.isLinux == true ||
-      Platform.isWindows == true ||
-      Platform.isMacOS == true) {
-    systemIsDesktop = true;
-    DesktopWindow.setWindowSize(const Size(784, 850));
-    DesktopWindow.setMinWindowSize(const Size(784, 820));
+  await PackageInfoUtils.initPackageInfo();
+
+  systemIsDesktop = true;
+  DesktopWindow.setMinWindowSize(const Size(784, 820));
+  if (Platform.isLinux == true) {
+    // DesktopWindow.setWindowSize(const Size(784, 850));
   } else {
     systemIsDesktop == false;
   }
 //  MobileAds.instance.initialize();
   WidgetsFlutterBinding.ensureInitialized();
+  runApp(
+    const Vpass(),
+  );
 }
 
 class Vpass extends StatefulWidget {
@@ -108,6 +111,7 @@ class _VpassState extends State<Vpass> {
   @override
   void initState() {
     super.initState();
+
     savedConfigs();
   }
 
@@ -157,34 +161,76 @@ class _VpassState extends State<Vpass> {
     }
   }
 
+  final ValueNotifier<ThemeMode> themeNotifier = ValueNotifier(ThemeMode.light);
+  final Color _brandBlue = const Color(0xFF1E88E5);
   @override
   Widget build(BuildContext context) {
     return DynamicColorBuilder(
         builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
-      return MaterialApp(
-        title: 'VPass 7',
-        themeMode: themeMode,
-        theme: ThemeData(
-          colorSchemeSeed: localAccentColor != 10 ? colorSelected.color : null,
-          colorScheme: localAccentColor == 10 ? lightDynamic : null,
-          useMaterial3: useMaterial3,
-          brightness: Brightness.light,
-        ),
-        darkTheme: ThemeData(
-          colorSchemeSeed: localAccentColor != 10 ? colorSelected.color : null,
-          colorScheme: localAccentColor == 10 ? darkDynamic : null,
-          useMaterial3: useMaterial3,
+      ColorScheme lightColorScheme;
+      ColorScheme darkColorScheme;
+
+      if (lightDynamic != null && darkDynamic != null) {
+        // On Android S+ devices, use the provided dynamic color scheme.
+        // (Recommended) Harmonize the dynamic color scheme' built-in semantic colors.
+        lightColorScheme = lightDynamic.harmonized();
+        // (Optional) Customize the scheme as desired. For example, one might
+        // want to use a brand color to override the dynamic [ColorScheme.secondary].
+        lightColorScheme = lightColorScheme.copyWith(secondary: _brandBlue);
+        // (Optional) If applicable, harmonize custom colors.
+
+        // Repeat for the dark color scheme.
+        darkColorScheme = darkDynamic.harmonized();
+        darkColorScheme = darkColorScheme.copyWith(secondary: _brandBlue);
+
+        //_isDemoUsingDynamicColors = true; // ignore, only for demo purposes
+      } else {
+        // Otherwise, use fallback schemes.
+        lightColorScheme = ColorScheme.fromSeed(
+          seedColor: _brandBlue,
+        );
+        darkColorScheme = ColorScheme.fromSeed(
+          seedColor: _brandBlue,
           brightness: Brightness.dark,
-        ),
-        home: Home(
-          useLightMode: useLightMode,
-          useMaterial3: useMaterial3,
-          colorSelected: colorSelected,
-          handleBrightnessChange: handleBrightnessChange,
-          handleMaterialVersionChange: handleMaterialVersionChange,
-          handleColorSelect: handleColorSelect,
-        ),
-      );
+        );
+      }
+
+      return ValueListenableBuilder<ThemeMode>(
+          valueListenable: themeNotifier,
+          builder: (_, ThemeMode currentMode, __) {
+            return MaterialApp(
+              title: 'VPass 7',
+              themeMode: themeMode,
+              theme: Platform.isLinux
+                  ? AdwaitaThemeData.light()
+                  : ThemeData(
+                      //scaffoldBackgroundColor: ,
+
+                      colorSchemeSeed:
+                          localAccentColor != 10 ? colorSelected.color : null,
+                      colorScheme: localAccentColor == 10 ? lightDynamic : null,
+                      useMaterial3: useMaterial3,
+                      brightness: Brightness.light,
+                    ),
+              darkTheme: Platform.isLinux
+                  ? AdwaitaThemeData.dark()
+                  : ThemeData(
+                      colorSchemeSeed:
+                          localAccentColor != 10 ? colorSelected.color : null,
+                      colorScheme: localAccentColor == 10 ? darkDynamic : null,
+                      useMaterial3: useMaterial3,
+                      brightness: Brightness.dark,
+                    ),
+              home: Home(
+                useLightMode: useLightMode,
+                useMaterial3: useMaterial3,
+                colorSelected: colorSelected,
+                handleBrightnessChange: handleBrightnessChange,
+                handleMaterialVersionChange: handleMaterialVersionChange,
+                handleColorSelect: handleColorSelect,
+              ),
+            );
+          });
     });
   }
 }

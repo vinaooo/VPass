@@ -4,7 +4,7 @@ import 'dart:core';
 bool systemIsDesktop = false;
 
 enum ColorSeed {
-  baseColor ('M3 Baseline', Color(0xff6750a4)),
+  baseColor('M3 Baseline', Color(0xff6750a4)),
   indigo('Indigo', Colors.indigo),
   blue('Blue', Colors.blue),
   teal('Teal', Colors.teal),

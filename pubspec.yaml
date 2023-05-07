@@ -1,8 +1,8 @@
-name: vpass_7
+name: VPass
 description: A new Flutter project.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.0.0+1
+version: 0.0.1+1
 
 environment:
   sdk: '>=3.0.0-290.0.dev <4.0.0'
@@ -19,6 +19,11 @@ dependencies:
   google_mobile_ads: ^3.0.0
   loading_animation_widget: ^1.2.0+4
   material_color_utilities: 
+  package_info_plus: ^3.1.2
+  fluttericon: ^2.0.0
+  flutter_svg: ^2.0.5
+  url_launcher: ^6.1.10
+  adwaita: ^0.5.2
 
 dev_dependencies:
   flutter_test:

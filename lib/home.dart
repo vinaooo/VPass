@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:core';
 import 'dart:io' show Platform;
-// import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'dart:io' show Platform;
 
 import 'settings.dart';
 import 'generator.dart';
 import 'globals.dart';
 import 'animations.dart';
+import 'ad_helper.dart';
 
 class Home extends StatefulWidget {
   const Home({
@@ -39,10 +41,30 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   bool showLargeSizeLayout = false;
 
   int screenIndex = ScreenSelected.passGenerator.value;
-
+  BannerAd? bannerAd;
   @override
   initState() {
     super.initState();
+    if (Platform.isAndroid == true) {
+      BannerAd(
+        adUnitId: AdHelper.bannerAdUnitId,
+        size: AdSize.fullBanner,
+        request: const AdRequest(),
+        listener: BannerAdListener(
+          onAdLoaded: (ad) {
+            setState(() {
+              bannerAd = ad as BannerAd;
+            });
+          },
+          onAdFailedToLoad: (ad, error) {
+            // Releases an ad resource when it fails to load
+            ad.dispose();
+            debugPrint(
+                'Ad load failed (code=${error.code} message=${error.message})');
+          },
+        ),
+      ).load();
+    }
     controller = AnimationController(
       duration: Duration(milliseconds: transitionLength.toInt() * 2),
       value: 0,
@@ -57,6 +79,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     controller.dispose();
+    bannerAd?.dispose();
     super.dispose();
   }
 
@@ -120,78 +143,95 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     }
   }
 
+  double adHeight = 0;
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: controller,
-      builder: (context, child) {
-        return NavigationTransition(
-          scaffoldKey: scaffoldKey,
-          animationController: controller,
-          railAnimation: railAnimation,
-          appBar: Platform.isAndroid == true
-              ? AppBar(
-                  title: const Text('VPass'),
-                )
-              : null,
-          body: createScreenFor(
-              ScreenSelected.values[screenIndex], controller.value == 1),
-          navigationRail: NavigationRail(
-            extended: showLargeSizeLayout,
-            destinations: const [
-              NavigationRailDestination(
-                icon: Icon(Icons.password_outlined),
-                label: Text('Generator'),
-                selectedIcon: Icon(Icons.password),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.settings_outlined),
-                label: Text('Settings'),
-                selectedIcon: Icon(Icons.settings),
-              ),
-            ],
-            selectedIndex: screenIndex,
-            onDestinationSelected: (index) {
-              setState(() {
-                screenIndex = index;
-                handleScreenChanged(screenIndex);
-              });
-            },
+    //bannerAd = null;
+    if (Platform.isAndroid == true) {
+      if (bannerAd != null) {
+        adHeight = 80 + bannerAd!.size.height.toDouble();
+      } else {
+        adHeight = 80;
+      }
+    }
+    return NavigationTransition(
+      scaffoldKey: scaffoldKey,
+      animationController: controller,
+      railAnimation: railAnimation,
+      appBar: Platform.isAndroid == true
+          ? AppBar(
+              title: const Text('VPass'),
+              centerTitle: true,
+            )
+          : null,
+      body: createScreenFor(
+          ScreenSelected.values[screenIndex], controller.value == 1),
+      navigationRail: NavigationRail(
+        extended: true,
+        labelType: NavigationRailLabelType.selected,
+        destinations: const [
+          NavigationRailDestination(
+            // padding: EdgeInsets.zero,
+            icon: Icon(Icons.password_outlined),
+            label: Text('Generator'),
+            selectedIcon: Icon(Icons.password),
           ),
-          navigationBar: Focus(
-            autofocus: true,
-            child: NavigationBar(
-              selectedIndex: screenIndex,
-              onDestinationSelected: (index) {
-                setState(() {
-                  screenIndex = index;
-                });
-                screenIndex = screenIndex;
-              },
-              destinations: const [
-                NavigationDestination(
-                  icon: Icon(Icons.password_outlined),
-                  label: 'Generator',
-                  selectedIcon: Icon(Icons.password),
+          NavigationRailDestination(
+            // padding: EdgeInsets.zero,
+            icon: Icon(Icons.settings_outlined),
+            label: Text('Settings'),
+            selectedIcon: Icon(Icons.settings),
+          ),
+        ],
+        selectedIndex: screenIndex,
+        onDestinationSelected: (index) {
+          setState(() {
+            screenIndex = index;
+            handleScreenChanged(screenIndex);
+          });
+        },
+      ),
+      navigationBar: Focus(
+        autofocus: true,
+        child: Container(
+            height: bannerAd == null ? 110 : adHeight,
+            alignment: Alignment.center,
+            child: Column(
+              children: [
+                SizedBox(
+                  width: bannerAd == null ? 0 : bannerAd?.size.width.toDouble(),
+                  height:
+                      bannerAd == null ? 30 : bannerAd?.size.height.toDouble(),
+                  child: bannerAd != null
+                      ? AdWidget(ad: bannerAd!)
+                      : const Text('Sad to see you using an adblocker!'),
                 ),
-                NavigationDestination(
-                  icon: Icon(Icons.settings_outlined),
-                  label: 'Settings',
-                  selectedIcon: Icon(Icons.settings),
+                NavigationBar(
+                  selectedIndex: screenIndex,
+                  onDestinationSelected: (index) {
+                    setState(() {
+                      screenIndex = index;
+                    });
+                    screenIndex = screenIndex;
+                  },
+                  destinations: const [
+                    NavigationDestination(
+                      icon: Icon(Icons.password_outlined),
+                      label: 'Generator',
+                      selectedIcon: Icon(Icons.password),
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.settings_outlined),
+                      label: 'Settings',
+                      selectedIcon: Icon(Icons.settings),
+                    ),
+                  ],
                 ),
               ],
-            ),
-          ),
-        );
-      },
+            )),
+      ),
     );
   }
-
-  // Future<InitializationStatus> _initGoogleMobileAds() {
-  // ignore: todo
-  //   // TODO: Initialize Google Mobile Ads SDK
-  //   return MobileAds.instance.initialize();
-  // }
 }
 
 class ComponentDecoration extends StatefulWidget {
@@ -211,45 +251,26 @@ class _ComponentDecorationState extends State<ComponentDecoration> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-      child: Column(
-        children: [
-          ConstrainedBox(
-            constraints: const BoxConstraints.tightFor(width: widthConstraint),
-            child: Focus(
-              focusNode: focusNode,
-              canRequestFocus: true,
-              child: GestureDetector(
-                onTapDown: (_) {
-                  focusNode.requestFocus();
-                },
-                behavior: HitTestBehavior.opaque,
-                child: Card(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    side: BorderSide(
-                      color: Theme.of(context).colorScheme.outlineVariant,
-                    ),
-                    borderRadius: const BorderRadius.all(Radius.circular(12)),
-                  ),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 5.0, vertical: 0.0),
-                        child: Center(
-                          child: widget.child,
-                        ),
-                      ),
-                    ],
+    return Column(
+      children: [
+        ConstrainedBox(
+          constraints: const BoxConstraints.tightFor(width: widthConstraint),
+          child: Card(
+            elevation: 1,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 5.0, vertical: 0.0),
+                  child: Center(
+                    child: widget.child,
                   ),
                 ),
-              ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
