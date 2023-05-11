@@ -1,6 +1,7 @@
-import 'dart:math';
-import 'package:flutter/material.dart';
+import 'dart:io' show Platform;
 import 'dart:core';
+
+import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttericon/fontelico_icons.dart';
@@ -9,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'version.dart';
 import 'home.dart';
+import 'globals.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen(
@@ -27,20 +29,43 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: ListView(
-        children: <Widget>[
-          ThemeSection(
-              handleBrightnessChange: widget.handleBrightnessChange,
-              handleColorSelect: widget.handleColorSelect),
-          const SizedBox(
-            height: 10,
+      child: Container(
+        decoration: BoxDecoration(
+          border: Platform.isLinux
+              ? context.isDarkMode
+                  ? const Border(
+                      top: BorderSide(color: Colors.transparent),
+                      left: BorderSide(color: Color.fromARGB(255, 74, 74, 74)),
+                      right: BorderSide(color: Colors.transparent),
+                      bottom: BorderSide(color: Colors.transparent),
+                    )
+                  : const Border(
+                      top: BorderSide(color: Colors.transparent),
+                      left:
+                          BorderSide(color: Color.fromARGB(255, 222, 222, 222)),
+                      right: BorderSide(color: Colors.transparent),
+                      bottom: BorderSide(color: Colors.transparent),
+                    )
+              : null,
+        ),
+        child: Container(
+          color: appBgDark,
+          child: ListView(
+            children: <Widget>[
+              ThemeSection(
+                  handleBrightnessChange: widget.handleBrightnessChange,
+                  handleColorSelect: widget.handleColorSelect),
+              const SizedBox(
+                height: 10,
+              ),
+              const OptionsSection(),
+              const SizedBox(
+                height: 10,
+              ),
+              const OthersSection(),
+            ],
           ),
-          const OptionsSection(),
-          const SizedBox(
-            height: 10,
-          ),
-          const OthersSection(),
-        ],
+        ),
       ),
     );
   }
@@ -71,7 +96,7 @@ class _OthersSectionState extends State<OthersSection> {
 
   @override
   Widget build(BuildContext context) {
-    return ComponentDecoration(
+    return CardCreator(
       child: Wrap(
         alignment: WrapAlignment.spaceEvenly,
         children: [
@@ -234,11 +259,13 @@ class _OthersSectionState extends State<OthersSection> {
                           flex: 1,
                           child: FilledButton(
                             style: FilledButton.styleFrom(
-                              shape: const RoundedRectangleBorder(
+                              shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.zero,
                                   topRight: Radius.zero,
-                                  bottomLeft: Radius.circular(8),
+                                  bottomLeft: Platform.isLinux
+                                      ? const Radius.circular(12)
+                                      : const Radius.circular(8),
                                   bottomRight: Radius.zero,
                                 ),
                               ),
@@ -358,7 +385,7 @@ class _OptionsSectionState extends State<OptionsSection> {
 
   @override
   Widget build(BuildContext context) {
-    return ComponentDecoration(
+    return CardCreator(
       child: Wrap(
         alignment: WrapAlignment.spaceEvenly,
         children: [
@@ -558,7 +585,7 @@ class _ThemeSectionState extends State<ThemeSection> {
                 accentLabelList[index],
               ],
             ));
-    return ComponentDecoration(
+    return CardCreator(
       child: Wrap(
         alignment: WrapAlignment.spaceEvenly,
         children: [

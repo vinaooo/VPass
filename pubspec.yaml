@@ -12,16 +12,12 @@ dependencies:
     sdk: flutter
 
   dynamic_color: 
-  desktop_window: ^0.4.0
   crypto: ^3.0.2
   convert: ^3.1.1
   shared_preferences: ^2.1.0
   google_mobile_ads: ^3.0.0
-  loading_animation_widget: ^1.2.0+4
-  material_color_utilities: 
   package_info_plus: ^3.1.2
   fluttericon: ^2.0.0
-  flutter_svg: ^2.0.5
   url_launcher: ^6.1.10
   adwaita: ^0.5.2
 

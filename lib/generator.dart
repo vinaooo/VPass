@@ -1,11 +1,14 @@
 // ignore_for_file: avoid_print
 
+import 'package:dynamic_color/dynamic_color.dart';
+import 'package:material_color_utilities/material_color_utilities.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'dart:core';
 import 'package:crypto/crypto.dart';
 import 'package:convert/convert.dart';
 import 'dart:convert';
+import 'dart:core';
+import 'dart:io' show Platform;
 // import 'package:loading_animation_widget/loading_animation_widget.dart';
 // import 'package:google_mobile_ads/google_mobile_ads.dart';
 // import 'dart:io' show Platform;
@@ -13,6 +16,7 @@ import 'dart:convert';
 // import 'ad_helper.dart';
 // import 'clipboard.dart';
 import 'globals.dart';
+import 'home.dart';
 
 class PasswordGenerator extends StatefulWidget {
   const PasswordGenerator({super.key});
@@ -31,9 +35,33 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
     );
 
     Widget schemeView(ThemeData theme) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15),
-        child: PasswordGeneratorPage(),
+      return Container(
+        decoration: BoxDecoration(
+          border: Platform.isLinux
+              ? context.isDarkMode
+                  ? const Border(
+                      top: BorderSide(color: Colors.transparent),
+                      left: BorderSide(color: Color.fromARGB(255, 74, 74, 74)),
+                      right: BorderSide(color: Colors.transparent),
+                      bottom: BorderSide(color: Colors.transparent),
+                    )
+                  : const Border(
+                      top: BorderSide(color: Colors.transparent),
+                      left:
+                          BorderSide(color: Color.fromARGB(255, 222, 222, 222)),
+                      right: BorderSide(color: Colors.transparent),
+                      bottom: BorderSide(color: Colors.transparent),
+                    )
+              : null,
+        ),
+        child: Container(
+          color: Platform.isLinux
+              ? context.isDarkMode
+                  ? appBgDark
+                  : const Color.fromARGB(255, 255, 255, 255)
+              : null,
+          child: const PasswordGeneratorPage(),
+        ),
       );
     }
 
@@ -272,178 +300,365 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                // padding: const EdgeInsets.symmetric(vertical: smallSpacing),
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: Column(
-                  children: [
-                    ConstrainedBox(
-                      constraints:
-                          const BoxConstraints.tightFor(width: widthConstraint),
-                      // Tapping within the a component card should request focus
-                      // for that component's children.
-                      child: Card(
-                        elevation: 1,
+        Expanded(
+          child: SingleChildScrollView(
+            physics:
+                const ScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            child: Column(
+              children: [
+                CardCreator(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 5, 0, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text('Type user, services or whatever other word',
+                                style: Theme.of(context).textTheme.titleSmall),
+                          ],
+                        ),
+                      ),
+                      Center(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(16, 5, 0, 0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      'Type user, services or whatever other word',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleSmall),
-                                ],
+                              padding: const EdgeInsets.all(smallSpacing),
+                              child: TextField(
+                                obscureText: aliasObscure,
+                                style: const TextStyle(
+                                  fontFamily: 'Ubuntu',
+                                  decorationThickness: 0,
+                                ),
+                                onChanged: (String value) {
+                                  if (value.isEmpty || value == "") {
+                                    aliasValidator = false;
+                                    setState(() => aliasText = value);
+                                  } else {
+                                    aliasValidator = true;
+                                    setState(() => aliasText = value);
+                                  }
+                                },
+                                enabled: speCharSwitch == false &&
+                                        numberSwitch == false &&
+                                        lettersSwitch == false
+                                    ? false
+                                    : true,
+                                decoration: InputDecoration(
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      aliasObscure == true
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        aliasObscure = !aliasObscure;
+                                      });
+                                    },
+                                  ),
+                                  labelText: 'Alias *',
+                                  hintText: "Enter an alias",
+                                  filled: true,
+                                  border: const OutlineInputBorder(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(12)),
+                                      borderSide:
+                                          BorderSide(color: Colors.red)),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 10.0, horizontal: 12),
+                                ),
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 5.0, vertical: 0.0),
-                              child: Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.all(smallSpacing),
-                                      child: TextField(
-                                        obscureText: aliasObscure,
-                                        style: const TextStyle(
-                                          fontFamily: 'Ubuntu',
-                                          decorationThickness: 0,
-                                        ),
-                                        onChanged: (String value) {
-                                          if (value.isEmpty || value == "") {
-                                            aliasValidator = false;
-                                            setState(() => aliasText = value);
-                                          } else {
-                                            aliasValidator = true;
-                                            setState(() => aliasText = value);
-                                          }
-                                        },
-                                        enabled: speCharSwitch == false &&
-                                                numberSwitch == false &&
-                                                lettersSwitch == false
-                                            ? false
-                                            : true,
-                                        decoration: InputDecoration(
-                                          suffixIcon: IconButton(
-                                            icon: Icon(
-                                              aliasObscure == true
-                                                  ? Icons.visibility
-                                                  : Icons.visibility_off,
-                                            ),
-                                            onPressed: () {
-                                              setState(() {
-                                                aliasObscure = !aliasObscure;
-                                              });
-                                            },
-                                          ),
-                                          labelText: 'Alias *',
-                                          hintText: "Enter an alias",
-                                          filled: true,
-                                          border: const OutlineInputBorder(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(12)),
-                                              borderSide: BorderSide(
-                                                  color: Colors.red)),
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  vertical: 10.0,
-                                                  horizontal: 12),
-                                        ),
-                                      ),
+                              padding: const EdgeInsets.all(smallSpacing),
+                              child: TextField(
+                                obscureText: true,
+                                style: const TextStyle(
+                                  fontFamily: 'Ubuntu',
+                                  decorationThickness: 0,
+                                ),
+                                onChanged: (String value) {
+                                  if (value.isEmpty || value == "") {
+                                    secretValidator = false;
+                                    setState(() => secretText = value);
+                                  } else {
+                                    secretValidator = true;
+                                    setState(() => secretText = value);
+                                  }
+                                },
+                                enabled: speCharSwitch == false &&
+                                        numberSwitch == false &&
+                                        lettersSwitch == false
+                                    ? false
+                                    : true,
+                                decoration: InputDecoration(
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      secretObscure == true
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
                                     ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.all(smallSpacing),
-                                      child: TextField(
-                                        obscureText: true,
-                                        style: const TextStyle(
-                                          fontFamily: 'Ubuntu',
-                                          decorationThickness: 0,
-                                        ),
-                                        onChanged: (String value) {
-                                          if (value.isEmpty || value == "") {
-                                            secretValidator = false;
-                                            setState(() => secretText = value);
-                                          } else {
-                                            secretValidator = true;
-                                            setState(() => secretText = value);
-                                          }
-                                        },
-                                        enabled: speCharSwitch == false &&
-                                                numberSwitch == false &&
-                                                lettersSwitch == false
-                                            ? false
-                                            : true,
-                                        decoration: InputDecoration(
-                                          suffixIcon: IconButton(
-                                            icon: Icon(
-                                              secretObscure == true
-                                                  ? Icons.visibility
-                                                  : Icons.visibility_off,
-                                            ),
-                                            onPressed: () {
-                                              setState(() {
-                                                secretObscure = !secretObscure;
-                                              });
-                                            },
-                                          ),
-                                          labelText: 'Secret *',
-                                          filled: true,
-                                          hintText: "Enter a secret",
-                                          border: const OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(12)),
-                                          ),
-                                          contentPadding:
-                                              const EdgeInsets.symmetric(
-                                                  vertical: 10.0,
-                                                  horizontal: 12),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                    onPressed: () {
+                                      setState(() {
+                                        secretObscure = !secretObscure;
+                                      });
+                                    },
+                                  ),
+                                  labelText: 'Secret *',
+                                  filled: true,
+                                  hintText: "Enter a secret",
+                                  border: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(12)),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 10.0, horizontal: 12),
                                 ),
                               ),
                             ),
                           ],
                         ),
                       ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Column(
+                  children: [
+                    Focus(
+                      focusNode: focusNode,
+                      canRequestFocus: true,
+                      child: GestureDetector(
+                        onTapDown: (_) {
+                          focusNode.requestFocus();
+                        },
+                        behavior: HitTestBehavior.opaque,
+                        child: CardCreator(
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(16, 5, 0, 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleSmall,
+                                        aliasValidator == false &&
+                                                secretValidator == false
+                                            ? "Password length: 0 characters"
+                                            : "Password length: ${currentSliderValue.round().toString()} characters")
+                                  ],
+                                ),
+                              ),
+                              ClipPath(
+                                // mainAxisSize: MainAxisSize.max,
+                                clipper: const ShapeBorderClipper(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.zero,
+                                        topLeft: Radius.zero,
+                                        bottomRight: Radius.circular(12),
+                                        bottomLeft: Radius.circular(12)),
+                                  ),
+                                ),
+                                // mainAxisSize: MainAxisSize.max,
+                                child: Expanded(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      stops: const [
+                                        0.15,
+                                        1,
+                                      ],
+                                      colors: securityNoPass() == 0
+                                          ? [
+                                              cardColorDark,
+                                              Color(Blend.harmonize(
+                                                  Theme.of(context)
+                                                      .colorScheme
+                                                      .error
+                                                      .value,
+                                                  cardColorDark.value))
+                                            ]
+                                          : securityNoPass() == 1
+                                              ? [
+                                                  cardColorDark,
+                                                  Color(Blend.harmonize(
+                                                      Colors.red.value,
+                                                      cardColorDark.value))
+                                                ]
+                                              : securityNoPass() == 2
+                                                  ? [
+                                                      cardColorDark,
+                                                      Color(Blend.harmonize(
+                                                          Colors
+                                                              .deepOrangeAccent
+                                                              .value,
+                                                          cardColorDark.value))
+                                                    ]
+                                                  : securityNoPass() == 3
+                                                      ? [
+                                                          cardColorDark,
+                                                          Color(Blend.harmonize(
+                                                              Colors
+                                                                  .orangeAccent
+                                                                  .value,
+                                                              cardColorDark
+                                                                  .value))
+                                                        ]
+                                                      : securityNoPass() == 4
+                                                          ? [
+                                                              cardColorDark,
+                                                              Color(Blend.harmonize(
+                                                                  Colors.amber
+                                                                      .value,
+                                                                  cardColorDark
+                                                                      .value))
+                                                            ]
+                                                          : securityNoPass() ==
+                                                                  5
+                                                              ? [
+                                                                  cardColorDark,
+                                                                  Color(Blend.harmonize(
+                                                                      const Color.fromARGB(
+                                                                              255,
+                                                                              255,
+                                                                              222,
+                                                                              3)
+                                                                          .value,
+                                                                      cardColorDark
+                                                                          .value))
+                                                                ]
+                                                              : securityNoPass() ==
+                                                                      6
+                                                                  ? [
+                                                                      cardColorDark,
+                                                                      Color(Blend.harmonize(
+                                                                          Colors
+                                                                              .yellow
+                                                                              .value,
+                                                                          cardColorDark
+                                                                              .value))
+                                                                    ]
+                                                                  : securityNoPass() ==
+                                                                          7
+                                                                      ? [
+                                                                          cardColorDark,
+                                                                          Color(Blend.harmonize(
+                                                                              const Color(0xffd0df00).value,
+                                                                              cardColorDark.value))
+                                                                        ]
+                                                                      : securityNoPass() ==
+                                                                              8
+                                                                          ? [
+                                                                              cardColorDark,
+                                                                              Color(Blend.harmonize(const Color.fromARGB(255, 54, 179, 126).value, cardColorDark.value))
+                                                                            ]
+                                                                          : securityNoPass() ==
+                                                                                  9
+                                                                              ? [
+                                                                                  cardColorDark,
+                                                                                  Color(Blend.harmonize(const Color.fromARGB(255, 0, 102, 68).value, cardColorDark.value))
+                                                                                ]
+                                                                              : [
+                                                                                  cardColorDark,
+                                                                                  cardColorDark
+                                                                                ],
+                                    )),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        SizedBox(
+                                          height: 150,
+                                          child: ListTile(
+                                            title: const Text(
+                                              '',
+                                              style: TextStyle(
+                                                fontSize: 0,
+                                              ),
+                                            ),
+                                            subtitle: Align(
+                                              alignment: AlignmentDirectional
+                                                  .bottomCenter,
+                                              child: Text(textNoPass(),
+                                                  textAlign: aliasText == "" &&
+                                                          secretText == ""
+                                                      ? TextAlign.center
+                                                      : TextAlign.justify,
+                                                  softWrap: true,
+                                                  style: TextStyle(
+                                                    color: aliasText == "" &&
+                                                            secretText == ""
+                                                        ? Colors.yellow
+                                                        : Colors.white,
+                                                    fontSize: newTextSize(
+                                                        pwValue(aliasText,
+                                                            secretText)),
+                                                    fontFamily: 'ShareTechMono',
+                                                  )),
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Align(
+                                            alignment: Alignment.bottomRight,
+                                            heightFactor: 1,
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                              ),
+                                              child: const Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Icon(
+                                                    Icons.copy,
+                                                  ),
+                                                  SizedBox(width: 10),
+                                                  Text('Copy'),
+                                                ],
+                                              ),
+                                              onPressed: () =>
+                                                  Clipboard.setData(
+                                                      ClipboardData(
+                                                          text: textNoPass())),
+                                              //  temporaryFunction(),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Padding(
-                // padding: const EdgeInsets.symmetric(vertical: smallSpacing),
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: Column(
+                const SizedBox(
+                  height: 10,
+                ),
+                Flex(
+                  direction: Axis.horizontal,
                   children: [
-                    ConstrainedBox(
-                      constraints:
-                          const BoxConstraints.tightFor(width: widthConstraint),
-                      // Tapping within the a component card should request focus
-                      // for that component's children.
-                      child: Focus(
-                        focusNode: focusNode,
-                        canRequestFocus: true,
-                        child: GestureDetector(
-                          onTapDown: (_) {
-                            focusNode.requestFocus();
-                          },
-                          behavior: HitTestBehavior.opaque,
-                          child: Card(
-                            elevation: 1,
+                    Expanded(
+                      child: Column(
+                        children: [
+                          CardCreator(
                             child: Column(
                               children: [
                                 Padding(
@@ -452,374 +667,202 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Text(
+                                      Text('Password characters:',
                                           style: Theme.of(context)
                                               .textTheme
-                                              .titleSmall,
-                                          aliasValidator == false &&
-                                                  secretValidator == false
-                                              ? "Password length: 0 characters"
-                                              : "Password length: ${currentSliderValue.round().toString()} characters")
+                                              .titleSmall),
                                     ],
                                   ),
                                 ),
-                                Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Card(
-                                        color: securityNoPass() == 0
-                                            ? const Color(0xffBF2600)
-                                            : securityNoPass() == 1
-                                                ? Colors.red
-                                                : securityNoPass() == 2
-                                                    ? Colors
-                                                        .deepOrangeAccent[400]
-                                                    : securityNoPass() == 3
-                                                        ? Colors
-                                                            .orangeAccent[400]
-                                                        : securityNoPass() == 4
-                                                            ? Colors.amber[400]
-                                                            : securityNoPass() ==
-                                                                    5
-                                                                ? const Color
-                                                                        .fromARGB(
-                                                                    255,
-                                                                    255,
-                                                                    222,
-                                                                    3)
-                                                                : securityNoPass() ==
-                                                                        6
-                                                                    ? Colors
-                                                                        .yellow
-                                                                    : securityNoPass() ==
-                                                                            7
-                                                                        ? const Color(
-                                                                            0xffd0df00)
-                                                                        : securityNoPass() ==
-                                                                                8
-                                                                            ? const Color.fromARGB(
-                                                                                255,
-                                                                                54,
-                                                                                179,
-                                                                                126)
-                                                                            : securityNoPass() == 9
-                                                                                ? const Color.fromARGB(255, 0, 102, 68)
-                                                                                : null,
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: <Widget>[
-                                            SizedBox(
-                                              height: 150,
-                                              child: ListTile(
-                                                title: const Text(
-                                                  '',
-                                                  style: TextStyle(
-                                                    fontSize: 0,
-                                                  ),
-                                                ),
-                                                subtitle: Text(textNoPass(),
-                                                    textAlign:
-                                                        aliasText == "" &&
-                                                                secretText == ""
-                                                            ? TextAlign.center
-                                                            : TextAlign.justify,
-                                                    softWrap: true,
-                                                    style: TextStyle(
-                                                      color: aliasText == "" &&
-                                                              secretText == ""
-                                                          ? Colors.yellow
-                                                          : Colors.white,
-                                                      fontSize: newTextSize(
-                                                          pwValue(aliasText,
-                                                              secretText)),
-                                                      fontFamily:
-                                                          'ShareTechMono',
-                                                    )),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Align(
-                                                alignment:
-                                                    Alignment.bottomRight,
-                                                heightFactor: 1,
-                                                child: ElevatedButton(
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8),
-                                                    ),
-                                                  ),
-                                                  child: const Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Icon(
-                                                        Icons.copy,
-                                                      ),
-                                                      SizedBox(width: 10),
-                                                      Text('Copy'),
-                                                    ],
-                                                  ),
-                                                  onPressed: () => Clipboard
-                                                      .setData(ClipboardData(
-                                                          text: textNoPass())),
-                                                  //  temporaryFunction(),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 5.0,
+                                    vertical: 0.0,
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Padding(
-                // padding: const EdgeInsets.symmetric(vertical: smallSpacing),
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                child: Flex(
-                  direction: Axis.horizontal,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        children: [
-                          ConstrainedBox(
-                            constraints: const BoxConstraints.tightFor(
-                                width: widthConstraint),
-                            // Tapping within the a component card should request focus
-                            // for that component's children.
-                            child: Card(
-                              elevation: 1,
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(16, 5, 0, 0),
-                                    child: Row(
+                                  child: Center(
+                                    child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: [
-                                        Text('Password characters:',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleSmall),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 5.0,
-                                      vertical: 0.0,
-                                    ),
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: <Widget>[
-                                              Row(children: <Widget>[
-                                                Expanded(
-                                                    flex: 2,
-                                                    child: Slider(
-                                                        value:
-                                                            currentSliderValue
-                                                                .round()
-                                                                .toDouble(),
-                                                        min: 6,
-                                                        max: 128,
-                                                        onChanged: speCharSwitch ==
-                                                                    false &&
-                                                                numberSwitch ==
-                                                                    false &&
-                                                                lettersSwitch ==
-                                                                    false
-                                                            ? null
-                                                            : aliasValidator ==
-                                                                        false &&
-                                                                    secretValidator ==
-                                                                        false
-                                                                ? null
-                                                                : (double
-                                                                        value) =>
-                                                                    {
-                                                                      setState(() =>
-                                                                          currentSliderValue =
-                                                                              value.toInt())
-                                                                    }))
-                                              ]),
-                                              Row(
-                                                children: <Widget>[
-                                                  Expanded(
-                                                    flex: 2,
-                                                    child: SwitchListTile(
-                                                      secondary: const Icon(
-                                                        Icons
-                                                            .attach_money_outlined,
-                                                        size: 35,
-                                                      ),
-                                                      title: const Text(
-                                                        'Special Characters',
-                                                      ),
-                                                      subtitle: Text(
-                                                          "$aliasValidator @#% characters into your password $secretValidator",
-                                                          style:
-                                                              const TextStyle(
-                                                                  fontSize:
-                                                                      12)),
-                                                      value: speCharSwitch,
-                                                      onChanged: aliasValidator ==
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: <Widget>[
+                                            Row(children: <Widget>[
+                                              Expanded(
+                                                  flex: 2,
+                                                  child: Slider(
+                                                      value: currentSliderValue
+                                                          .round()
+                                                          .toDouble(),
+                                                      min: 6,
+                                                      max: 128,
+                                                      onChanged: speCharSwitch ==
                                                                   false &&
-                                                              secretValidator ==
+                                                              numberSwitch ==
+                                                                  false &&
+                                                              lettersSwitch ==
                                                                   false
                                                           ? null
-                                                          : (bool value) {
-                                                              setState(() {
-                                                                speCharSwitch =
-                                                                    value;
-                                                              });
-                                                            },
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: <Widget>[
-                                                  Expanded(
-                                                    flex: 2,
-                                                    child: SwitchListTile(
-                                                      secondary: const Icon(
-                                                        Icons
-                                                            .onetwothree_outlined,
-                                                        size: 35,
-                                                      ),
-                                                      title: const Text(
-                                                        'Numbers',
-                                                      ),
-                                                      subtitle: const Text(
-                                                          "Numbers into your password",
-                                                          style: TextStyle(
-                                                              fontSize: 12)),
-                                                      value: numberSwitch,
-                                                      onChanged: aliasValidator ==
-                                                                  false &&
-                                                              secretValidator ==
-                                                                  false
-                                                          ? null
-                                                          : (bool value) {
-                                                              setState(() {
-                                                                numberSwitch =
-                                                                    value;
-                                                              });
-                                                            },
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: <Widget>[
-                                                  Expanded(
-                                                    flex: 2,
-                                                    child: SwitchListTile(
-                                                      secondary: const Icon(
-                                                        Icons.abc_outlined,
-                                                        size: 35,
-                                                      ),
-                                                      title: const Text(
-                                                        'Letters',
-                                                      ),
-                                                      subtitle: const Text(
-                                                          "Letters into your password",
-                                                          style: TextStyle(
-                                                              fontSize: 12)),
-                                                      value: lettersSwitch,
-                                                      onChanged: aliasValidator ==
-                                                                  false &&
-                                                              secretValidator ==
-                                                                  false
-                                                          ? null
-                                                          : (bool value) {
-                                                              setState(() {
-                                                                lettersSwitch =
-                                                                    value;
-                                                                capLettersSwitch =
-                                                                    false;
-                                                              });
-                                                            },
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: <Widget>[
-                                                  Expanded(
-                                                    child: Padding(
-                                                      padding: const EdgeInsets
-                                                              .fromLTRB(
-                                                          20, 0, 0, 0),
-                                                      child: SwitchListTile(
-                                                          secondary: const Icon(
-                                                            Icons
-                                                                .format_size_outlined,
-                                                            size: 35,
-                                                          ),
-                                                          title: const Text(
-                                                            'Capital letters',
-                                                          ),
-                                                          subtitle: const Text(
-                                                              "Some capital letters into your password",
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      12)),
-                                                          value:
-                                                              capLettersSwitch,
-                                                          onChanged: aliasValidator ==
+                                                          : aliasValidator ==
                                                                       false &&
                                                                   secretValidator ==
                                                                       false
                                                               ? null
-                                                              : lettersSwitch ==
-                                                                      false
-                                                                  ? null
-                                                                  : (bool
-                                                                      value) {
-                                                                      setState(
-                                                                          () {
-                                                                        capLettersSwitch =
-                                                                            value;
-                                                                      });
-                                                                    }),
+                                                              : (double
+                                                                      value) =>
+                                                                  {
+                                                                    setState(() =>
+                                                                        currentSliderValue =
+                                                                            value.toInt())
+                                                                  }))
+                                            ]),
+                                            Row(
+                                              children: <Widget>[
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: SwitchListTile(
+                                                    secondary: const Icon(
+                                                      Icons
+                                                          .attach_money_outlined,
+                                                      size: 35,
                                                     ),
+                                                    title: const Text(
+                                                      'Special Characters',
+                                                    ),
+                                                    subtitle: Text(
+                                                        "$aliasValidator @#% characters into your password $secretValidator",
+                                                        style: const TextStyle(
+                                                            fontSize: 12)),
+                                                    value: speCharSwitch,
+                                                    onChanged: aliasValidator ==
+                                                                false &&
+                                                            secretValidator ==
+                                                                false
+                                                        ? null
+                                                        : (bool value) {
+                                                            setState(() {
+                                                              speCharSwitch =
+                                                                  value;
+                                                            });
+                                                          },
                                                   ),
-                                                ],
-                                              )
-                                            ],
-                                          )
-                                        ],
-                                      ),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: <Widget>[
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: SwitchListTile(
+                                                    secondary: const Icon(
+                                                      Icons
+                                                          .onetwothree_outlined,
+                                                      size: 35,
+                                                    ),
+                                                    title: const Text(
+                                                      'Numbers',
+                                                    ),
+                                                    subtitle: const Text(
+                                                        "Numbers into your password",
+                                                        style: TextStyle(
+                                                            fontSize: 12)),
+                                                    value: numberSwitch,
+                                                    onChanged: aliasValidator ==
+                                                                false &&
+                                                            secretValidator ==
+                                                                false
+                                                        ? null
+                                                        : (bool value) {
+                                                            setState(() {
+                                                              numberSwitch =
+                                                                  value;
+                                                            });
+                                                          },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: <Widget>[
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: SwitchListTile(
+                                                    secondary: const Icon(
+                                                      Icons.abc_outlined,
+                                                      size: 35,
+                                                    ),
+                                                    title: const Text(
+                                                      'Letters',
+                                                    ),
+                                                    subtitle: const Text(
+                                                        "Letters into your password",
+                                                        style: TextStyle(
+                                                            fontSize: 12)),
+                                                    value: lettersSwitch,
+                                                    onChanged: aliasValidator ==
+                                                                false &&
+                                                            secretValidator ==
+                                                                false
+                                                        ? null
+                                                        : (bool value) {
+                                                            setState(() {
+                                                              lettersSwitch =
+                                                                  value;
+                                                              capLettersSwitch =
+                                                                  false;
+                                                            });
+                                                          },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: <Widget>[
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding: const EdgeInsets
+                                                        .fromLTRB(20, 0, 0, 0),
+                                                    child: SwitchListTile(
+                                                        secondary: const Icon(
+                                                          Icons
+                                                              .format_size_outlined,
+                                                          size: 35,
+                                                        ),
+                                                        title: const Text(
+                                                          'Capital letters',
+                                                        ),
+                                                        subtitle: const Text(
+                                                            "Some capital letters into your password",
+                                                            style: TextStyle(
+                                                                fontSize: 12)),
+                                                        value: capLettersSwitch,
+                                                        onChanged: aliasValidator ==
+                                                                    false &&
+                                                                secretValidator ==
+                                                                    false
+                                                            ? null
+                                                            : lettersSwitch ==
+                                                                    false
+                                                                ? null
+                                                                : (bool value) {
+                                                                    setState(
+                                                                        () {
+                                                                      capLettersSwitch =
+                                                                          value;
+                                                                    });
+                                                                  }),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        )
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -827,8 +870,8 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
                     ),
                   ],
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],

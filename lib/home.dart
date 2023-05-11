@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'dart:core';
 import 'dart:io' show Platform;
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:io' show Platform;
+import 'package:fluttericon/typicons_icons.dart';
 
 import 'settings.dart';
 import 'generator.dart';
@@ -168,19 +170,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ScreenSelected.values[screenIndex], controller.value == 1),
       navigationRail: NavigationRail(
         extended: true,
-        labelType: NavigationRailLabelType.selected,
+        backgroundColor: Platform.isLinux
+            ? context.isDarkMode
+                ? const Color.fromARGB(255, 44, 44, 44)
+                : const Color.fromARGB(255, 250, 250, 250)
+            : null,
         destinations: const [
           NavigationRailDestination(
-            // padding: EdgeInsets.zero,
-            icon: Icon(Icons.password_outlined),
-            label: Text('Generator'),
-            selectedIcon: Icon(Icons.password),
-          ),
+              // padding: EdgeInsets.zero,
+              icon: Icon(Icons.lock_outlined),
+              label: Text('Generator'),
+              selectedIcon: Icon(Icons.lock_open_outlined)),
           NavigationRailDestination(
             // padding: EdgeInsets.zero,
             icon: Icon(Icons.settings_outlined),
             label: Text('Settings'),
-            selectedIcon: Icon(Icons.settings),
           ),
         ],
         selectedIndex: screenIndex,
@@ -234,8 +238,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 }
 
-class ComponentDecoration extends StatefulWidget {
-  const ComponentDecoration({
+class CardCreator extends StatefulWidget {
+  const CardCreator({
     super.key,
     required this.child,
   });
@@ -243,30 +247,37 @@ class ComponentDecoration extends StatefulWidget {
   final Widget child;
 
   @override
-  State<ComponentDecoration> createState() => _ComponentDecorationState();
+  State<CardCreator> createState() => _CardCreatorState();
 }
 
-class _ComponentDecorationState extends State<ComponentDecoration> {
+class _CardCreatorState extends State<CardCreator> {
   final focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ConstrainedBox(
-          constraints: const BoxConstraints.tightFor(width: widthConstraint),
-          child: Card(
-            elevation: 1,
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 5.0, vertical: 0.0),
-                  child: Center(
-                    child: widget.child,
-                  ),
-                ),
-              ],
+        Padding(
+          padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints.tightFor(width: widthConstraint),
+            child: Card(
+              shape: Platform.isLinux
+                  ? RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    )
+                  : null,
+              color: Platform.isLinux
+                  ? context.isDarkMode
+                      ? cardColorDark
+                      : const Color.fromARGB(255, 250, 250, 250)
+                  : null,
+              elevation: 1,
+              child: Column(
+                children: [
+                  Center(child: widget.child),
+                ],
+              ),
             ),
           ),
         ),

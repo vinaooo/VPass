@@ -3,7 +3,7 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:desktop_window/desktop_window.dart';
+//import 'package:desktop_window/desktop_window.dart';
 import 'dart:core';
 import 'dart:io' show Platform;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,17 +16,18 @@ import 'version.dart';
 //import 'ad_helper.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await PackageInfoUtils.initPackageInfo();
 
-  systemIsDesktop = true;
-  DesktopWindow.setMinWindowSize(const Size(784, 820));
+  //DesktopWindow.setMinWindowSize(const Size(784, 820));
   if (Platform.isLinux == true) {
+    systemIsDesktop = true;
     // DesktopWindow.setWindowSize(const Size(784, 850));
   } else {
     systemIsDesktop == false;
   }
 //  MobileAds.instance.initialize();
-  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
     const Vpass(),
   );

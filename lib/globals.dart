@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'dart:core';
 
@@ -19,6 +21,17 @@ enum ColorSeed {
   final Color color;
 }
 
+Color cardColorDark = const Color.fromARGB(255, 61, 61, 61);
+
+Color appBgDark = const Color.fromARGB(255, 44, 44, 44);
+Color passbgColor(context) {
+  if (context.isDarkMode) {
+    return cardColorDark;
+  } else {
+    return Colors.white;
+  }
+}
+
 enum ScreenSelected {
   passGenerator(0),
   settings(1);
@@ -33,3 +46,11 @@ const double largeWidthBreakpoint = 1200;
 const double transitionLength = 500;
 const smallSpacing = 10.0;
 const double widthConstraint = 450;
+
+extension DarkMode on BuildContext {
+  /// is dark mode currently enabled?
+  bool get isDarkMode {
+    final brightness = MediaQuery.of(this).platformBrightness;
+    return brightness == Brightness.dark;
+  }
+}
