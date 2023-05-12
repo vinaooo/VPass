@@ -1,9 +1,10 @@
-<script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="vinaooooooooo" data-color="#FF5F5F" data-emoji=""  data-font="Lato" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#ffffff" data-coffee-color="#FFDD00" ></script>
+
+<a href="https://www.buymeacoffee.com/vinaooooooooo"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=vinaooooooooo&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00" /></a>
 
 
 # VPass
 
-# Welcome to VPass!
+## Welcome to VPass!
 
 Looking for an easy-to-use password management solution? Look no further than our app!
 
@@ -22,9 +23,7 @@ Once you've entered your information, a strong and secure password will be gener
 
 We recommend that you enter information in these fields that will help you easily recover your password if needed, and that you create a private pattern that only you can remember.
 
-</br>
-</br>
-**Examples**
+###  Examples
 
 ![enter image description here](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-12-22.png)
 ![Alias and Scret](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-08-51.png)
@@ -38,7 +37,7 @@ If you leave one field empty or enter the same information in both fields, the g
 So go ahead and enter any information you want in the Alias and Secret fields, and our app will take care of the rest. Try it out now and experience the convenience of hassle-free password management!
 
 
-**Password especifications:**
+### Password especifications:
 
 ![configs](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-26-49.png)
 
@@ -47,8 +46,3 @@ We offer a wide range of password characteristic settings to suit your preferenc
 In our app, you can choose to include special characters, numbers, and uppercase letters in your passwords to make them stronger and more secure. You can also adjust the length of your passwords and select whether to include ambiguous characters to avoid confusion.
 
 To access these settings, simply navigate to the password characteristic settings section of the app. From there, you can customize your password settings to your liking and generate passwords that meet your specific requirements.
-<!--stackedit_data:
-eyJoaXN0b3J5IjpbLTMzMDE5Mzk2NiwxMTQzNDY1MjAyLC02Nz
-YzNjUxNDgsLTE4ODc0OTQzMzIsMTQ3MjE1NzU2NSwxOTk1NDU0
-OTU3LC02NzMxODg3ODBdfQ==
--->
