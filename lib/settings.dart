@@ -31,7 +31,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-          border: Platform.isLinux
+          border: isLinux
               ? context.isDarkMode
                   ? const Border(
                       top: BorderSide(color: Colors.transparent),
@@ -49,7 +49,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               : null,
         ),
         child: Container(
-          color: appBgDark,
+          color: context.isDarkMode ? appBgDark : appBgLight,
           child: ListView(
             children: <Widget>[
               ThemeSection(
@@ -90,270 +90,133 @@ class _OthersSectionState extends State<OthersSection> {
         applicationVersion: PackageInfoUtils.getInfo('App version'),
         children: [
           Text(
-              '${PackageInfoUtils.getInfo('App name')} ${PackageInfoUtils.getInfo('App version')} ${PackageInfoUtils.getInfo('Build number')} ${PackageInfoUtils.getInfo('Build signature')} ${PackageInfoUtils.getInfo('Installer store')}'),
+              '${PackageInfoUtils.getInfo('App name')} ${PackageInfoUtils.getInfo('App version')} build: ${PackageInfoUtils.getInfo('Build number')} ${PackageInfoUtils.getInfo('Build signature')} ${PackageInfoUtils.getInfo('Installer store')}'),
         ]);
   }
 
   @override
   Widget build(BuildContext context) {
     return CardCreator(
+      title: 'Others',
       child: Wrap(
         alignment: WrapAlignment.spaceEvenly,
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-            child: Column(
-              children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(16, 8, 0, 0),
-                  child: Row(
-                    children: [
-                      Text('Others'),
-                    ],
-                  ),
+          Column(
+            children: <Widget>[
+              ListTile(
+                title: const Text('About'),
+                horizontalTitleGap: 0,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12)),
                 ),
-                ListTile(
-                  title: const Text('About'),
-                  leading: const Icon(Icons.info_outline),
-                  onTap: _showDialog,
-                ),
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(16, 8, 0, 0),
-                  child: Row(
-                    children: [
-                      Text('Collaborate'),
-                    ],
-                  ),
-                ),
-                Column(
+                subtitle:
+                    const Text('Version, debug and Open Source Licenses.'),
+                subtitleTextStyle: const TextStyle(fontSize: 13),
+                leading: const Icon(Icons.info_outline),
+                onTap: _showDialog,
+              ),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(16, 8, 0, 16),
+                child: Row(
                   children: [
-                    Flex(
-                      direction: Axis.horizontal,
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: FilledButton(
-                            style: FilledButton.styleFrom(
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(8.0),
-                                  topRight: Radius.zero,
-                                  bottomLeft: Radius.zero,
-                                  bottomRight: Radius.zero,
-                                ),
-                              ),
+                    Text('Collaborate:'),
+                  ],
+                ),
+              ),
+              Column(
+                children: [
+                  Flex(
+                    direction: Axis.horizontal,
+                    children: [
+                      Expanded(
+                        flex: 10,
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero,
                             ),
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Icon(
-                                  Icons.coffee_outlined,
-                                  size: 20,
-                                ),
-                                Text(
-                                  'Pay me a coffee',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            onPressed: () {},
                           ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Icon(
+                                Icons.coffee_outlined,
+                                size: 23,
+                              ),
+                              Text('Pay me a coffee'),
+                            ],
+                          ),
+                          onPressed: () {},
                         ),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: FilledButton(
-                            style: FilledButton.styleFrom(
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.zero,
-                                  topRight: Radius.circular(8),
-                                  bottomLeft: Radius.zero,
-                                  bottomRight: Radius.zero,
-                                ),
-                              ),
-                            ),
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Icon(Fontelico.emo_beer, size: 15),
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Text('Pay me a beer',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
-                      child: Flex(
-                        direction: Axis.horizontal,
-                        children: [
-                          Expanded(
-                            flex: 3,
-                            child: FilledButton(
-                              style: FilledButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(0),
-                                ),
-                              ),
-                              child: const Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Icon(FontAwesome5.ad),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    'Remove ads',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                              onPressed: () {},
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 4,
-                          ),
-                          Expanded(
-                            flex: 5,
-                            child: FilledButton(
-                              style: FilledButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(0),
-                                ),
-                              ),
-                              child: const Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Icon(Icons.sports_esports_rounded),
-                                  Text(
-                                    'Pay my children a xbox game',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                              onPressed: () {},
-                            ),
-                          ),
-                        ],
                       ),
-                    ),
-                    Flex(
+                      const SizedBox(
+                        width: 2,
+                      ),
+                      Expanded(
+                        flex: 9,
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero,
+                            ),
+                          ),
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Icon(Fontelico.emo_beer, size: 15),
+                              Text('Pay me a beer'),
+                            ],
+                          ),
+                          onPressed: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
+                    child: Flex(
                       direction: Axis.horizontal,
                       children: [
                         Expanded(
-                          flex: 1,
+                          flex: 3,
                           child: FilledButton(
                             style: FilledButton.styleFrom(
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.zero,
-                                  topRight: Radius.zero,
-                                  bottomLeft: Platform.isLinux
-                                      ? const Radius.circular(12)
-                                      : const Radius.circular(8),
-                                  bottomRight: Radius.zero,
-                                ),
+                                borderRadius: BorderRadius.circular(0),
                               ),
                             ),
-                            onPressed: launchGithub,
+                            onPressed: isLinux ? null : () {},
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
+                              mainAxisSize: MainAxisSize.max,
                               children: [
-                                Icon(
-                                  FontAwesome5.github,
-                                  size: 20,
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  'Github',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
+                                Icon(FontAwesome5.ad),
+                                Text('Remove ads'),
                               ],
                             ),
                           ),
                         ),
                         const SizedBox(
-                          width: 4,
+                          width: 2,
                         ),
                         Expanded(
-                          flex: 1,
+                          flex: 5,
                           child: FilledButton(
                             style: FilledButton.styleFrom(
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.zero),
-                            ),
-                            onPressed: launchTelegram,
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  FontAwesome5.telegram_plane,
-                                  size: 20,
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  'Telegram',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: FilledButton(
-                            style: FilledButton.styleFrom(
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.zero,
-                                  topRight: Radius.zero,
-                                  bottomLeft: Radius.zero,
-                                  bottomRight: Radius.circular(8),
-                                ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0),
                               ),
                             ),
                             child: const Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisSize: MainAxisSize.min,
+                              mainAxisSize: MainAxisSize.max,
                               children: [
-                                Icon(
-                                  Icons.translate,
-                                  size: 20,
-                                ),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  'Translate',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
+                                Icon(Icons.sports_esports_rounded),
+                                Text('Pay my children a Xbox game'),
                               ],
                             ),
                             onPressed: () {},
@@ -361,10 +224,100 @@ class _OthersSectionState extends State<OthersSection> {
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                  Flex(
+                    direction: Axis.horizontal,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.zero,
+                                topRight: Radius.zero,
+                                bottomLeft: isLinux
+                                    ? const Radius.circular(12)
+                                    : const Radius.circular(8),
+                                bottomRight: Radius.zero,
+                              ),
+                            ),
+                          ),
+                          onPressed: launchGithub,
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Icon(
+                                FontAwesome5.github,
+                                size: 20,
+                              ),
+                              Text('Github'),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 2,
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero),
+                          ),
+                          onPressed: launchTelegram,
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Icon(
+                                FontAwesome5.telegram_plane,
+                                size: 20,
+                              ),
+                              Text('Telegram'),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 2,
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.zero,
+                                topRight: Radius.zero,
+                                bottomLeft: Radius.zero,
+                                bottomRight: isLinux
+                                    ? const Radius.circular(12)
+                                    : const Radius.circular(8),
+                              ),
+                            ),
+                          ),
+                          onPressed: null,
+                          child: const Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Icon(
+                                Icons.translate,
+                                size: 20,
+                              ),
+                              Text('Translate'),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
@@ -386,19 +339,12 @@ class _OptionsSectionState extends State<OptionsSection> {
   @override
   Widget build(BuildContext context) {
     return CardCreator(
+      title: 'Options',
       child: Wrap(
         alignment: WrapAlignment.spaceEvenly,
         children: [
           Column(
             children: <Widget>[
-              const Padding(
-                padding: EdgeInsets.fromLTRB(16, 8, 0, 0),
-                child: Row(
-                  children: [
-                    Text('Options'),
-                  ],
-                ),
-              ),
               const CheckboxListTile(
                 title: Text('Hide password'),
                 value: true,
@@ -586,21 +532,14 @@ class _ThemeSectionState extends State<ThemeSection> {
               ],
             ));
     return CardCreator(
+      title: 'Appearence',
       child: Wrap(
         alignment: WrapAlignment.spaceEvenly,
         children: [
           Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
+            padding: const EdgeInsets.only(bottom: 8.0, top: 8),
             child: Column(
               children: [
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(16, 5, 0, 0),
-                  child: Row(
-                    children: [
-                      Text("Appearance"),
-                    ],
-                  ),
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

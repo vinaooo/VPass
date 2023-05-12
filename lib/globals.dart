@@ -1,9 +1,13 @@
 import 'dart:io';
 
+import 'package:material_color_utilities/material_color_utilities.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 
 bool systemIsDesktop = false;
+
+bool isLinux = Platform.isLinux;
+bool isAndroid = Platform.isAndroid;
 
 enum ColorSeed {
   baseColor('M3 Baseline', Color(0xff6750a4)),
@@ -21,9 +25,43 @@ enum ColorSeed {
   final Color color;
 }
 
+Color passwordCardColor(int securityNoPass, context, bool isDark) {
+  if (securityNoPass == 0) {
+    return Color(Blend.harmonize(
+        Theme.of(context).colorScheme.error.value, cardColorDark.value));
+  } else if (securityNoPass == 1) {
+    return Color(Blend.harmonize(Colors.red.value, cardColorDark.value));
+  } else if (securityNoPass == 2) {
+    return Color(
+        Blend.harmonize(Colors.deepOrangeAccent.value, cardColorDark.value));
+  } else if (securityNoPass == 3) {
+    return Color(
+        Blend.harmonize(Colors.orangeAccent.value, cardColorDark.value));
+  } else if (securityNoPass == 4) {
+    return Color(Blend.harmonize(Colors.amber.value, cardColorDark.value));
+  } else if (securityNoPass == 5) {
+    return Color(
+        Blend.harmonize(const Color(0xffde0600).value, cardColorDark.value));
+  } else if (securityNoPass == 6) {
+    return Color(Blend.harmonize(Colors.yellow.value, cardColorDark.value));
+  } else if (securityNoPass == 7) {
+    return Color(
+        Blend.harmonize(const Color(0xffd0df00).value, cardColorDark.value));
+  } else if (securityNoPass == 8) {
+    return Color(
+        Blend.harmonize(const Color(0xff36B37E).value, cardColorDark.value));
+  } else if (securityNoPass == 9) {
+    return Color(
+        Blend.harmonize(const Color(0xff006644).value, cardColorDark.value));
+  }
+
+  return Colors.transparent;
+}
+
 Color cardColorDark = const Color.fromARGB(255, 61, 61, 61);
 
 Color appBgDark = const Color.fromARGB(255, 44, 44, 44);
+Color appBgLight = const Color.fromARGB(255, 255, 255, 255);
 Color passbgColor(context) {
   if (context.isDarkMode) {
     return cardColorDark;

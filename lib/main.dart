@@ -20,7 +20,7 @@ void main() async {
   await PackageInfoUtils.initPackageInfo();
 
   //DesktopWindow.setMinWindowSize(const Size(784, 820));
-  if (Platform.isLinux == true) {
+  if (isLinux == true) {
     systemIsDesktop = true;
     // DesktopWindow.setWindowSize(const Size(784, 850));
   } else {
@@ -202,7 +202,7 @@ class _VpassState extends State<Vpass> {
             return MaterialApp(
               title: 'VPass 7',
               themeMode: themeMode,
-              theme: Platform.isLinux
+              theme: isLinux
                   ? AdwaitaThemeData.light()
                   : ThemeData(
                       //scaffoldBackgroundColor: ,
@@ -213,7 +213,7 @@ class _VpassState extends State<Vpass> {
                       useMaterial3: useMaterial3,
                       brightness: Brightness.light,
                     ),
-              darkTheme: Platform.isLinux
+              darkTheme: isLinux
                   ? AdwaitaThemeData.dark()
                   : ThemeData(
                       colorSchemeSeed:

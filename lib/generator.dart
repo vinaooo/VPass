@@ -8,7 +8,6 @@ import 'package:crypto/crypto.dart';
 import 'package:convert/convert.dart';
 import 'dart:convert';
 import 'dart:core';
-import 'dart:io' show Platform;
 // import 'package:loading_animation_widget/loading_animation_widget.dart';
 // import 'package:google_mobile_ads/google_mobile_ads.dart';
 // import 'dart:io' show Platform;
@@ -37,7 +36,7 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
     Widget schemeView(ThemeData theme) {
       return Container(
         decoration: BoxDecoration(
-          border: Platform.isLinux
+          border: isLinux
               ? context.isDarkMode
                   ? const Border(
                       top: BorderSide(color: Colors.transparent),
@@ -55,10 +54,10 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
               : null,
         ),
         child: Container(
-          color: Platform.isLinux
+          color: isLinux
               ? context.isDarkMode
                   ? appBgDark
-                  : const Color.fromARGB(255, 255, 255, 255)
+                  : appBgLight
               : null,
           child: const PasswordGeneratorPage(),
         ),
@@ -307,18 +306,9 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
             child: Column(
               children: [
                 CardCreator(
+                  title: 'Type user, services or whatever other word',
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 5, 0, 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text('Type user, services or whatever other word',
-                                style: Theme.of(context).textTheme.titleSmall),
-                          ],
-                        ),
-                      ),
                       Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -438,208 +428,109 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
                         },
                         behavior: HitTestBehavior.opaque,
                         child: CardCreator(
+                          title: aliasValidator == false &&
+                                  secretValidator == false
+                              ? "Password length: 0 characters"
+                              : "Password length: ${currentSliderValue.round().toString()} characters",
                           child: Column(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(16, 5, 0, 5),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleSmall,
-                                        aliasValidator == false &&
-                                                secretValidator == false
-                                            ? "Password length: 0 characters"
-                                            : "Password length: ${currentSliderValue.round().toString()} characters")
-                                  ],
-                                ),
-                              ),
                               ClipPath(
                                 // mainAxisSize: MainAxisSize.max,
                                 clipper: const ShapeBorderClipper(
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.only(
-                                        topRight: Radius.zero,
-                                        topLeft: Radius.zero,
-                                        bottomRight: Radius.circular(12),
-                                        bottomLeft: Radius.circular(12)),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(12)),
                                   ),
                                 ),
                                 // mainAxisSize: MainAxisSize.max,
-                                child: Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      stops: const [
-                                        0.15,
-                                        1,
-                                      ],
-                                      colors: securityNoPass() == 0
-                                          ? [
-                                              cardColorDark,
-                                              Color(Blend.harmonize(
-                                                  Theme.of(context)
-                                                      .colorScheme
-                                                      .error
-                                                      .value,
-                                                  cardColorDark.value))
-                                            ]
-                                          : securityNoPass() == 1
-                                              ? [
-                                                  cardColorDark,
-                                                  Color(Blend.harmonize(
-                                                      Colors.red.value,
-                                                      cardColorDark.value))
-                                                ]
-                                              : securityNoPass() == 2
-                                                  ? [
-                                                      cardColorDark,
-                                                      Color(Blend.harmonize(
-                                                          Colors
-                                                              .deepOrangeAccent
-                                                              .value,
-                                                          cardColorDark.value))
-                                                    ]
-                                                  : securityNoPass() == 3
-                                                      ? [
-                                                          cardColorDark,
-                                                          Color(Blend.harmonize(
-                                                              Colors
-                                                                  .orangeAccent
-                                                                  .value,
-                                                              cardColorDark
-                                                                  .value))
-                                                        ]
-                                                      : securityNoPass() == 4
-                                                          ? [
-                                                              cardColorDark,
-                                                              Color(Blend.harmonize(
-                                                                  Colors.amber
-                                                                      .value,
-                                                                  cardColorDark
-                                                                      .value))
-                                                            ]
-                                                          : securityNoPass() ==
-                                                                  5
-                                                              ? [
-                                                                  cardColorDark,
-                                                                  Color(Blend.harmonize(
-                                                                      const Color.fromARGB(
-                                                                              255,
-                                                                              255,
-                                                                              222,
-                                                                              3)
-                                                                          .value,
-                                                                      cardColorDark
-                                                                          .value))
-                                                                ]
-                                                              : securityNoPass() ==
-                                                                      6
-                                                                  ? [
-                                                                      cardColorDark,
-                                                                      Color(Blend.harmonize(
-                                                                          Colors
-                                                                              .yellow
-                                                                              .value,
-                                                                          cardColorDark
-                                                                              .value))
-                                                                    ]
-                                                                  : securityNoPass() ==
-                                                                          7
-                                                                      ? [
-                                                                          cardColorDark,
-                                                                          Color(Blend.harmonize(
-                                                                              const Color(0xffd0df00).value,
-                                                                              cardColorDark.value))
-                                                                        ]
-                                                                      : securityNoPass() ==
-                                                                              8
-                                                                          ? [
-                                                                              cardColorDark,
-                                                                              Color(Blend.harmonize(const Color.fromARGB(255, 54, 179, 126).value, cardColorDark.value))
-                                                                            ]
-                                                                          : securityNoPass() ==
-                                                                                  9
-                                                                              ? [
-                                                                                  cardColorDark,
-                                                                                  Color(Blend.harmonize(const Color.fromARGB(255, 0, 102, 68).value, cardColorDark.value))
-                                                                                ]
-                                                                              : [
-                                                                                  cardColorDark,
-                                                                                  cardColorDark
-                                                                                ],
-                                    )),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        SizedBox(
-                                          height: 150,
-                                          child: ListTile(
-                                            title: const Text(
-                                              '',
-                                              style: TextStyle(
-                                                fontSize: 0,
-                                              ),
-                                            ),
-                                            subtitle: Align(
-                                              alignment: AlignmentDirectional
-                                                  .bottomCenter,
-                                              child: Text(textNoPass(),
-                                                  textAlign: aliasText == "" &&
-                                                          secretText == ""
-                                                      ? TextAlign.center
-                                                      : TextAlign.justify,
-                                                  softWrap: true,
-                                                  style: TextStyle(
-                                                    color: aliasText == "" &&
-                                                            secretText == ""
-                                                        ? Colors.yellow
-                                                        : Colors.white,
-                                                    fontSize: newTextSize(
-                                                        pwValue(aliasText,
-                                                            secretText)),
-                                                    fontFamily: 'ShareTechMono',
-                                                  )),
-                                            ),
-                                          ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: passwordCardColor(
+                                              securityNoPass(),
+                                              context,
+                                              context.isDarkMode),
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Align(
-                                            alignment: Alignment.bottomRight,
-                                            heightFactor: 1,
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            SizedBox(
+                                              height: 150,
+                                              child: ListTile(
+                                                title: const Text(
+                                                  '',
+                                                  style: TextStyle(
+                                                    fontSize: 0,
+                                                  ),
+                                                ),
+                                                subtitle: Align(
+                                                  alignment:
+                                                      AlignmentDirectional
+                                                          .bottomCenter,
+                                                  child: Text(textNoPass(),
+                                                      textAlign: aliasText ==
+                                                                  "" &&
+                                                              secretText == ""
+                                                          ? TextAlign.center
+                                                          : TextAlign.justify,
+                                                      softWrap: true,
+                                                      style: TextStyle(
+                                                        color: aliasText ==
+                                                                    "" &&
+                                                                secretText == ""
+                                                            ? Colors.yellow
+                                                            : Colors.white,
+                                                        fontSize: newTextSize(
+                                                            pwValue(aliasText,
+                                                                secretText)),
+                                                        fontFamily:
+                                                            'ShareTechMono',
+                                                      )),
                                                 ),
                                               ),
-                                              child: const Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Icon(
-                                                    Icons.copy,
-                                                  ),
-                                                  SizedBox(width: 10),
-                                                  Text('Copy'),
-                                                ],
-                                              ),
-                                              onPressed: () =>
-                                                  Clipboard.setData(
-                                                      ClipboardData(
-                                                          text: textNoPass())),
-                                              //  temporaryFunction(),
                                             ),
-                                          ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Align(
+                                                alignment:
+                                                    Alignment.bottomRight,
+                                                heightFactor: 1,
+                                                child: ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8),
+                                                    ),
+                                                  ),
+                                                  child: const Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Icon(
+                                                        Icons.copy,
+                                                      ),
+                                                      SizedBox(width: 10),
+                                                      Text('Copy'),
+                                                    ],
+                                                  ),
+                                                  onPressed: () => Clipboard
+                                                      .setData(ClipboardData(
+                                                          text: textNoPass())),
+                                                  //  temporaryFunction(),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -659,21 +550,9 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
                       child: Column(
                         children: [
                           CardCreator(
+                            title: 'Password characters:',
                             child: Column(
                               children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(16, 5, 0, 0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text('Password characters:',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleSmall),
-                                    ],
-                                  ),
-                                ),
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 5.0,

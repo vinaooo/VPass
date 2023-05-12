@@ -47,7 +47,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   initState() {
     super.initState();
-    if (Platform.isAndroid == true) {
+    if (isAndroid == true) {
       BannerAd(
         adUnitId: AdHelper.bannerAdUnitId,
         size: AdSize.fullBanner,
@@ -149,7 +149,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     //bannerAd = null;
-    if (Platform.isAndroid == true) {
+    if (isAndroid == true) {
       if (bannerAd != null) {
         adHeight = 80 + bannerAd!.size.height.toDouble();
       } else {
@@ -160,7 +160,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       scaffoldKey: scaffoldKey,
       animationController: controller,
       railAnimation: railAnimation,
-      appBar: Platform.isAndroid == true
+      appBar: isAndroid == true
           ? AppBar(
               title: const Text('VPass'),
               centerTitle: true,
@@ -170,7 +170,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ScreenSelected.values[screenIndex], controller.value == 1),
       navigationRail: NavigationRail(
         extended: true,
-        backgroundColor: Platform.isLinux
+        backgroundColor: isLinux
             ? context.isDarkMode
                 ? const Color.fromARGB(255, 44, 44, 44)
                 : const Color.fromARGB(255, 250, 250, 250)
@@ -239,8 +239,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 }
 
 class CardCreator extends StatefulWidget {
-  const CardCreator({
+  String title;
+
+  CardCreator({
     super.key,
+    required this.title,
     required this.child,
   });
 
@@ -261,23 +264,32 @@ class _CardCreatorState extends State<CardCreator> {
           padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
           child: ConstrainedBox(
             constraints: const BoxConstraints.tightFor(width: widthConstraint),
-            child: Card(
-              shape: Platform.isLinux
-                  ? RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    )
-                  : null,
-              color: Platform.isLinux
-                  ? context.isDarkMode
-                      ? cardColorDark
-                      : const Color.fromARGB(255, 250, 250, 250)
-                  : null,
-              elevation: 1,
-              child: Column(
-                children: [
-                  Center(child: widget.child),
-                ],
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 10, 0, 10),
+                  child: Text(widget.title),
+                ),
+                Card(
+                  shape: isLinux
+                      ? RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        )
+                      : null,
+                  color: isLinux
+                      ? context.isDarkMode
+                          ? cardColorDark
+                          : const Color.fromARGB(255, 250, 250, 250)
+                      : null,
+                  elevation: 1,
+                  child: Column(
+                    children: [
+                      Center(child: widget.child),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
