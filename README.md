@@ -3,14 +3,14 @@
 
 
 
-<a href="https://www.buymeacoffee.com/vinaooooooooo">
+<center><a href="https://www.buymeacoffee.com/vinaooooooooo">
   <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=vinaooooooooo&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00" />
 </a>
 <a href="https://www.paypal.com/donate/?business=LAWPZD4LYVVLN&no_recurring=0&item_name=Turning+dreams+into+reality.+Your+contribution+matters!+Join+me+on+this+inspiring+journey.+Thank+you+for+your+support%21&currency_code=USD">
   <img src="https://github.com/vinaooo/VPass/blob/master/images/blue.svg" height="49">
-</a>
+</a></center>
 
-# VPass UBUNTu
+# <center>VPass</center>
 
 ## Welcome to VPass!
 
