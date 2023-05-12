@@ -22,8 +22,7 @@ Our app provides a hassle-free alternative to traditional password management, m
 
 So why waste any more time juggling passwords and struggling to remember them all? Give our app a try and simplify your digital life today!
 
-## Getting Started
-
+## Getting Sstarted
 ![First screen](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2010-29-50.png)
 
 On the main screen, you'll find two text fields - Alias and Secret. Only one of these fields is required, so you have the flexibility to choose what information to provide.
@@ -35,7 +34,7 @@ We recommend that you enter information in these fields that will help you easil
 ### Examples
 
 ![enter image description here](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-12-22.png)
-![Alias and Secret](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-08-51.png)
+![Alias and Scret](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-08-51.png)
 ![Different Alias and Secrets](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-13-24.png)
 ![enter image description here](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-12-33.png)
 
@@ -45,4 +44,13 @@ If you leave one field empty or enter the same information in both fields, the g
 
 So go ahead and enter any information you want in the Alias and Secret fields,
 
-</div>
+
+### Password especifications:
+
+![configs](https://github.com/vinaooo/vpass/blob/master/Prints/Captura%20de%20tela%20de%202023-03-26%2011-26-49.png)
+
+We offer a wide range of password characteristic settings to suit your preferences and security needs.
+
+In our app, you can choose to include special characters, numbers, and uppercase letters in your passwords to make them stronger and more secure. You can also adjust the length of your passwords and select whether to include ambiguous characters to avoid confusion.
+
+To access these settings, simply navigate to the password characteristic settings section of the app. From there, you can customize your password settings to your liking and generate passwords that meet your specific requirements.
