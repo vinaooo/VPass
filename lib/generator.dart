@@ -1,7 +1,5 @@
 // ignore_for_file: avoid_print
 
-import 'package:dynamic_color/dynamic_color.dart';
-import 'package:material_color_utilities/material_color_utilities.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';

@@ -1,4 +1,3 @@
-import 'dart:io' show Platform;
 import 'dart:core';
 
 import 'package:flutter/material.dart';

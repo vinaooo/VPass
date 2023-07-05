@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 //import 'package:desktop_window/desktop_window.dart';
 import 'dart:core';
-import 'dart:io' show Platform;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:adwaita/adwaita.dart';
 //import 'package:google_mobile_ads/google_mobile_ads.dart';

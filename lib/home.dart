@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'dart:core';
-import 'dart:io' show Platform;
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'dart:io' show Platform;
-import 'package:fluttericon/typicons_icons.dart';
 
 import 'settings.dart';
 import 'generator.dart';
