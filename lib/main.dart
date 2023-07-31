@@ -11,7 +11,7 @@ import 'package:adwaita/adwaita.dart';
 
 import 'globals.dart';
 import 'home.dart';
-import 'version.dart';
+import 'settings/version.dart';
 //import 'ad_helper.dart';
 
 void main() async {

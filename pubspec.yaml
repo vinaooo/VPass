@@ -1,4 +1,4 @@
-name: Vpass
+name: vpass
 description: A new Flutter project.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
@@ -21,6 +21,8 @@ dependencies:
   url_launcher: ^6.1.10
   adwaita: ^0.5.2
   material_color_utilities: 
+  flutter_launcher_icons: ^0.13.1
+  device_info_plus: ^9.0.2
 
 dev_dependencies:
   flutter_test:

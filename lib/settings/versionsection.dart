@@ -1,0 +1,267 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'dart:async';
+import 'package:flutter/services.dart';
+
+import 'version.dart';
+import '../home.dart';
+
+class VersionSection extends StatefulWidget {
+  const VersionSection({super.key});
+
+  @override
+  State<VersionSection> createState() => _VersionSectionState();
+}
+
+class _VersionSectionState extends State<VersionSection> {
+  static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+  Map<String, dynamic> _deviceData = <String, dynamic>{};
+
+  @override
+  void initState() {
+    super.initState();
+    initPlatformState();
+  }
+
+  Future<void> initPlatformState() async {
+    var deviceData = <String, dynamic>{};
+
+    try {
+      if (kIsWeb) {
+        deviceData = _readWebBrowserInfo(await deviceInfoPlugin.webBrowserInfo);
+      } else {
+        deviceData = switch (defaultTargetPlatform) {
+          TargetPlatform.android =>
+            _readAndroidBuildData(await deviceInfoPlugin.androidInfo),
+          TargetPlatform.iOS =>
+            _readIosDeviceInfo(await deviceInfoPlugin.iosInfo),
+          TargetPlatform.linux =>
+            _readLinuxDeviceInfo(await deviceInfoPlugin.linuxInfo),
+          TargetPlatform.windows =>
+            _readWindowsDeviceInfo(await deviceInfoPlugin.windowsInfo),
+          TargetPlatform.macOS =>
+            _readMacOsDeviceInfo(await deviceInfoPlugin.macOsInfo),
+          TargetPlatform.fuchsia => <String, dynamic>{
+              'Error:': 'Fuchsia platform isn\'t supported'
+            },
+        };
+      }
+    } on PlatformException {
+      deviceData = <String, dynamic>{
+        'Error:': 'Failed to get platform version.'
+      };
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      _deviceData = deviceData;
+    });
+  }
+
+  Map<String, dynamic> _readAndroidBuildData(AndroidDeviceInfo build) {
+    return <String, dynamic>{
+      'Security Patch: ': build.version.securityPatch,
+      'SDK: ': build.version.sdkInt,
+      'Version: ': build.version.release,
+      'Incremental version: ': build.version.incremental,
+      'Brand: ': build.brand,
+      'Device: ': build.device,
+      'Manufacturer: ': build.manufacturer,
+      'Model: ': build.model,
+      'Product: ': build.product,
+      'Display Size: ':
+          ((build.displayMetrics.sizeInches * 10).roundToDouble() / 10),
+      'Display Width Pixels: ': build.displayMetrics.widthPx.toInt(),
+      'Display Height Pixels: ': build.displayMetrics.heightPx.toInt(),
+      'Display Width Inches: ':
+          build.displayMetrics.widthInches.toStringAsFixed(2),
+      'Display Height Inches: ':
+          build.displayMetrics.heightInches.toStringAsFixed(2),
+      'DPI: ': build.displayMetrics.xDpi.toInt(),
+    };
+  }
+
+  Map<String, dynamic> _readIosDeviceInfo(IosDeviceInfo data) {
+    return <String, dynamic>{
+      'name: ': data.name,
+      'systemName: ': data.systemName,
+      'systemVersion: ': data.systemVersion,
+      'model: ': data.model,
+      'localizedModel: ': data.localizedModel,
+      'identifierForVendor: ': data.identifierForVendor,
+      'isPhysicalDevice: ': data.isPhysicalDevice,
+      'utsname.sysname: ': data.utsname.sysname,
+      'utsname.nodename: ': data.utsname.nodename,
+      'utsname.release: ': data.utsname.release,
+      'utsname.version: ': data.utsname.version,
+      'utsname.machine: ': data.utsname.machine,
+    };
+  }
+
+  Map<String, dynamic> _readLinuxDeviceInfo(LinuxDeviceInfo data) {
+    return <String, dynamic>{
+      'name: ': data.name,
+      'version: ': data.version,
+      'id: ': data.id,
+      'idLike: ': data.idLike,
+      'versionCodename: ': data.versionCodename,
+      'versionId: ': data.versionId,
+      'prettyName: ': data.prettyName,
+      'buildId: ': data.buildId,
+      'variant: ': data.variant,
+      'variantId: ': data.variantId,
+      'machineId: ': data.machineId,
+    };
+  }
+
+  Map<String, dynamic> _readWebBrowserInfo(WebBrowserInfo data) {
+    return <String, dynamic>{
+      'browserName: ': describeEnum(data.browserName),
+      'appCodeName: ': data.appCodeName,
+      'appName: ': data.appName,
+      'appVersion: ': data.appVersion,
+      'platform: ': data.platform,
+      'product: ': data.product,
+      'productSub: ': data.productSub,
+      'userAgent: ': data.userAgent,
+      'vendor: ': data.vendor,
+      'vendorSub: ': data.vendorSub,
+      'hardwareConcurrency: ': data.hardwareConcurrency,
+    };
+  }
+
+  Map<String, dynamic> _readMacOsDeviceInfo(MacOsDeviceInfo data) {
+    return <String, dynamic>{
+      'arch: ': data.arch,
+      'model: ': data.model,
+      'kernelVersion: ': data.kernelVersion,
+      'majorVersion: ': data.majorVersion,
+      'minorVersion: ': data.minorVersion,
+      'patchVersion: ': data.patchVersion,
+      'osRelease: ': data.osRelease,
+      'systemGUID: ': data.systemGUID,
+    };
+  }
+
+  Map<String, dynamic> _readWindowsDeviceInfo(WindowsDeviceInfo data) {
+    return <String, dynamic>{
+      'Version: ': data.productName,
+      'Edition: ': data.editionId,
+      'Build Number: ': data.buildNumber,
+      'Build: ': data.buildLab,
+      'Build Lab Ex: ': data.buildLabEx,
+      'Display Version: ': data.displayVersion,
+      'Id: ': data.productId,
+      'Device Id: ': data.deviceId,
+    };
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CardCreator(
+      title: 'About',
+      child: Wrap(
+        alignment: WrapAlignment.spaceEvenly,
+        children: [
+          Column(
+            children: <Widget>[
+              ListTile(
+                title: const Text('APP Version:'),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12)),
+                ),
+                subtitle: Text(PackageInfoUtils.getInfo('App version')),
+                subtitleTextStyle: const TextStyle(fontSize: 11),
+                leading: const Icon(Icons.info_outline),
+                // onTap: _showDialog,
+              ),
+              ListTile(
+                title: const Text('Build Number:'),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12)),
+                ),
+                subtitle: Text(PackageInfoUtils.getInfo('Build number')),
+                subtitleTextStyle: const TextStyle(fontSize: 11),
+                leading: const Icon(Icons.pin_outlined),
+              ),
+              ListTile(
+                title: const Text('System:'),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12)),
+                ),
+                subtitle: Text(Platform.operatingSystem),
+                subtitleTextStyle: const TextStyle(fontSize: 11),
+                leading: const Icon(Icons.store_mall_directory_outlined),
+                onTap: () => _showDeviceInfoDialog(context),
+              ),
+              ListTile(
+                title: const Text('Store:'),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(12),
+                      topRight: Radius.circular(12)),
+                ),
+                subtitle: Text(PackageInfoUtils.getInfo('Installer store')),
+                subtitleTextStyle: const TextStyle(fontSize: 11),
+                leading: const Icon(Icons.store_mall_directory_outlined),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showDeviceInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Device Information'),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: _deviceData.keys.map(
+              (String property) {
+                return Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        property,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          '${_deviceData[property]}',
+                          maxLines: 10,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ).toList(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+}

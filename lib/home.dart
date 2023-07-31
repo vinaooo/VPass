@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:core';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import 'settings.dart';
+import 'settings/settings.dart';
 import 'generator.dart';
 import 'globals.dart';
 import 'animations.dart';
@@ -234,6 +234,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   }
 }
 
+// ignore: must_be_immutable
 class CardCreator extends StatefulWidget {
   String title;
 

@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:material_color_utilities/material_color_utilities.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
@@ -8,6 +8,10 @@ bool systemIsDesktop = false;
 
 bool isLinux = Platform.isLinux;
 bool isAndroid = Platform.isAndroid;
+bool isIos = Platform.isIOS;
+bool isWeb = kIsWeb;
+bool isWindows = Platform.isWindows;
+bool isMacOS = Platform.isMacOS;
 
 enum ColorSeed {
   baseColor('M3 Baseline', Color(0xff6750a4)),
