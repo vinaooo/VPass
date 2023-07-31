@@ -5,6 +5,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
 
+import 'pubspec.dart';
 import 'version.dart';
 import '../home.dart';
 
@@ -168,51 +169,32 @@ class _VersionSectionState extends State<VersionSection> {
         children: [
           Column(
             children: <Widget>[
-              ListTile(
-                title: const Text('APP Version:'),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      topRight: Radius.circular(12)),
-                ),
-                subtitle: Text(PackageInfoUtils.getInfo('App version')),
-                subtitleTextStyle: const TextStyle(fontSize: 11),
-                leading: const Icon(Icons.info_outline),
+              const ListTile(
+                title: Text('APP Version:'),
+                subtitle: Text(Pubspec.versionFull),
+                subtitleTextStyle: TextStyle(fontSize: 11),
+                leading: Icon(Icons.info_outline),
                 // onTap: _showDialog,
               ),
               ListTile(
                 title: const Text('Build Number:'),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      topRight: Radius.circular(12)),
-                ),
                 subtitle: Text(PackageInfoUtils.getInfo('Build number')),
                 subtitleTextStyle: const TextStyle(fontSize: 11),
                 leading: const Icon(Icons.pin_outlined),
               ),
               ListTile(
                 title: const Text('System:'),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      topRight: Radius.circular(12)),
-                ),
-                subtitle: Text(Platform.operatingSystem),
+                subtitle: Text(Platform.operatingSystem[0].toUpperCase() +
+                    Platform.operatingSystem.substring(1).toLowerCase()),
                 subtitleTextStyle: const TextStyle(fontSize: 11),
                 leading: const Icon(Icons.store_mall_directory_outlined),
                 onTap: () => _showDeviceInfoDialog(context),
               ),
-              ListTile(
-                title: const Text('Store:'),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      topRight: Radius.circular(12)),
-                ),
-                subtitle: Text(PackageInfoUtils.getInfo('Installer store')),
-                subtitleTextStyle: const TextStyle(fontSize: 11),
-                leading: const Icon(Icons.store_mall_directory_outlined),
+              const ListTile(
+                title: Text('Store:'),
+                subtitle: Text(Pubspec.store),
+                subtitleTextStyle: TextStyle(fontSize: 11),
+                leading: Icon(Icons.store_mall_directory_outlined),
               ),
             ],
           ),

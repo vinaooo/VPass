@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import 'pubspec.dart';
+
 class PackageInfoUtils {
   static PackageInfo _packageInfo = PackageInfo(
     appName: 'Unknown',
@@ -26,7 +28,7 @@ class PackageInfoUtils {
   static final Map<String, String Function()> _infoMap = {
     'App name': () => _packageInfo.appName,
     'Package name': () => _packageInfo.packageName,
-    'App version': () => _packageInfo.version,
+    'App version': () => Pubspec.version,
     'Build number': () => _packageInfo.buildNumber,
     'Build signature': () => _packageInfo.buildSignature,
     'Installer store': () => _packageInfo.installerStore ?? 'Github',
