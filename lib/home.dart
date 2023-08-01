@@ -144,7 +144,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   double adHeight = 0;
   @override
   Widget build(BuildContext context) {
-    //bannerAd = null;
+    //bannerAd = null; //remove ad banner to test and prints
     if (isAndroid == true) {
       if (bannerAd != null) {
         adHeight = 80 + bannerAd!.size.height.toDouble();

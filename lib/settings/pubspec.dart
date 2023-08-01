@@ -19,7 +19,7 @@ mixin Pubspec {
 
   static const homepage = 'https://github.com/vinaooo/vpass';
 
-  static const store = 'Github';
+  static const store = 'Google PlayStore';
 
   static const builders = <dynamic, dynamic>{
     'about': null,
