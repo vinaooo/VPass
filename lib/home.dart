@@ -128,8 +128,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget createScreenFor(
-      ScreenSelected screenSelected, bool showNavBarExample) {
+  Widget createScreenFor(ScreenSelected screenSelected) {
     switch (screenSelected) {
       case ScreenSelected.passGenerator:
         return const PasswordGenerator();
@@ -152,6 +151,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         adHeight = 80;
       }
     }
+
     return NavigationTransition(
       scaffoldKey: scaffoldKey,
       animationController: controller,
@@ -162,8 +162,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               centerTitle: true,
             )
           : null,
-      body: createScreenFor(
-          ScreenSelected.values[screenIndex], controller.value == 1),
+      body: createScreenFor(ScreenSelected.values[screenIndex]),
       navigationRail: NavigationRail(
         extended: true,
         backgroundColor: isLinux

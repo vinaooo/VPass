@@ -1,4 +1,4 @@
-package com.example.vpass_7
+package dev.techv.vpass
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -14,6 +14,7 @@ import 'dart:core';
 // import 'clipboard.dart';
 import 'globals.dart';
 import 'home.dart';
+import 'privacyandtos.dart';
 
 class PasswordGenerator extends StatefulWidget {
   const PasswordGenerator({super.key});
@@ -281,10 +282,23 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
     return textDynamicSize;
   }
 
+  bool alertDialogShown = false; // Variável de controle
+
   @override
   void initState() {
     super.initState();
-    aliasObscure = false;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showCustomAlertDialog(); // Chama a função para exibir o AlertDialog
+    });
+  }
+
+  void showCustomAlertDialog() async {
+    if (!alertDialogShown) {
+      await CustomAlertDialog.show(context);
+      setState(() {
+        alertDialogShown = true; // Marca que o AlertDialog foi mostrado
+      });
+    }
   }
 
   bool aliasObscure = false;

@@ -5,13 +5,13 @@ mixin Pubspec {
 
   static const description = "This is an example.\n";
 
-  static const versionFull = '0.1.1.b';
+  static const versionFull = '0.1.2.b';
 
-  static const version = '0.1.1';
+  static const version = '0.1.2';
 
   static const versionSmall = '0.1';
 
-  static const versionBuild = 1;
+  static const versionBuild = 2;
 
   static const versionPreRelease = '';
 

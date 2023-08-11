@@ -166,36 +166,36 @@ class _VpassState extends State<Vpass> {
   @override
   Widget build(BuildContext context) {
     return DynamicColorBuilder(
-        builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
-      ColorScheme lightColorScheme;
-      ColorScheme darkColorScheme;
+      builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+        ColorScheme lightColorScheme;
+        ColorScheme darkColorScheme;
 
-      if (lightDynamic != null && darkDynamic != null) {
-        // On Android S+ devices, use the provided dynamic color scheme.
-        // (Recommended) Harmonize the dynamic color scheme' built-in semantic colors.
-        lightColorScheme = lightDynamic.harmonized();
-        // (Optional) Customize the scheme as desired. For example, one might
-        // want to use a brand color to override the dynamic [ColorScheme.secondary].
-        lightColorScheme = lightColorScheme.copyWith(secondary: _brandBlue);
-        // (Optional) If applicable, harmonize custom colors.
+        if (lightDynamic != null && darkDynamic != null) {
+          // On Android S+ devices, use the provided dynamic color scheme.
+          // (Recommended) Harmonize the dynamic color scheme' built-in semantic colors.
+          lightColorScheme = lightDynamic.harmonized();
+          // (Optional) Customize the scheme as desired. For example, one might
+          // want to use a brand color to override the dynamic [ColorScheme.secondary].
+          lightColorScheme = lightColorScheme.copyWith(secondary: _brandBlue);
+          // (Optional) If applicable, harmonize custom colors.
 
-        // Repeat for the dark color scheme.
-        darkColorScheme = darkDynamic.harmonized();
-        darkColorScheme = darkColorScheme.copyWith(secondary: _brandBlue);
+          // Repeat for the dark color scheme.
+          darkColorScheme = darkDynamic.harmonized();
+          darkColorScheme = darkColorScheme.copyWith(secondary: _brandBlue);
 
-        //_isDemoUsingDynamicColors = true; // ignore, only for demo purposes
-      } else {
-        // Otherwise, use fallback schemes.
-        lightColorScheme = ColorScheme.fromSeed(
-          seedColor: _brandBlue,
-        );
-        darkColorScheme = ColorScheme.fromSeed(
-          seedColor: _brandBlue,
-          brightness: Brightness.dark,
-        );
-      }
+          //_isDemoUsingDynamicColors = true; // ignore, only for demo purposes
+        } else {
+          // Otherwise, use fallback schemes.
+          lightColorScheme = ColorScheme.fromSeed(
+            seedColor: _brandBlue,
+          );
+          darkColorScheme = ColorScheme.fromSeed(
+            seedColor: _brandBlue,
+            brightness: Brightness.dark,
+          );
+        }
 
-      return ValueListenableBuilder<ThemeMode>(
+        return ValueListenableBuilder<ThemeMode>(
           valueListenable: themeNotifier,
           builder: (_, ThemeMode currentMode, __) {
             return MaterialApp(
@@ -230,7 +230,9 @@ class _VpassState extends State<Vpass> {
                 handleColorSelect: handleColorSelect,
               ),
             );
-          });
-    });
+          },
+        );
+      },
+    );
   }
 }

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'pubspec.dart';
 import 'version.dart';
@@ -19,6 +20,9 @@ class VersionSection extends StatefulWidget {
 class _VersionSectionState extends State<VersionSection> {
   static final DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
   Map<String, dynamic> _deviceData = <String, dynamic>{};
+
+  String policyURL = 'https://vpass.techv.dev/privacy.html';
+  String tosURL = 'https://vpass.techv.dev/tos.html';
 
   @override
   void initState() {
@@ -107,13 +111,7 @@ class _VersionSectionState extends State<VersionSection> {
       'name: ': data.name,
       'version: ': data.version,
       'id: ': data.id,
-      'idLike: ': data.idLike,
-      'versionCodename: ': data.versionCodename,
-      'versionId: ': data.versionId,
       'prettyName: ': data.prettyName,
-      'buildId: ': data.buildId,
-      'variant: ': data.variant,
-      'variantId: ': data.variantId,
       'machineId: ': data.machineId,
     };
   }
@@ -187,7 +185,7 @@ class _VersionSectionState extends State<VersionSection> {
                 subtitle: Text(Platform.operatingSystem[0].toUpperCase() +
                     Platform.operatingSystem.substring(1).toLowerCase()),
                 subtitleTextStyle: const TextStyle(fontSize: 11),
-                leading: const Icon(Icons.store_mall_directory_outlined),
+                leading: const Icon(Icons.android),
                 onTap: () => _showDeviceInfoDialog(context),
               ),
               const ListTile(
@@ -195,6 +193,23 @@ class _VersionSectionState extends State<VersionSection> {
                 subtitle: Text(Pubspec.store),
                 subtitleTextStyle: TextStyle(fontSize: 11),
                 leading: Icon(Icons.store_mall_directory_outlined),
+              ),
+              ListTile(
+                title: const Text('Privacy policy'),
+                onTap: () => _launchURL(policyURL),
+                leading: const Icon(Icons.privacy_tip_outlined),
+              ),
+              ListTile(
+                title: const Text('Terms of Service'),
+                onTap: () => _launchURL(tosURL),
+                leading: const Icon(Icons.security),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.zero,
+                      topRight: Radius.zero,
+                      bottomLeft: Radius.circular(15),
+                      bottomRight: Radius.circular(15)),
+                ),
               ),
             ],
           ),
@@ -245,5 +260,12 @@ class _VersionSectionState extends State<VersionSection> {
         ],
       ),
     );
+  }
+}
+
+_launchURL(linkUrl) async {
+  final Uri url = Uri.parse(linkUrl);
+  if (!await launchUrl(url)) {
+    throw Exception('Could not launch $url');
   }
 }
