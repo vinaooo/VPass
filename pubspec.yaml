@@ -19,6 +19,8 @@ dependencies:
   url_launcher: ^6.1.10
   material_color_utilities: 
   device_info_plus: ^9.0.2
+  google_mobile_ads: ^3.0.0
+  dynamic_color: ^1.6.6
 
 dev_dependencies:
   flutter_test:

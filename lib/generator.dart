@@ -28,36 +28,36 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
     Widget schemeView(ThemeData theme) {
       return Container(
         decoration: BoxDecoration(
-          color: isLinux && !isWeb
-              ? context.isDarkMode
-                  ? appBgDark
-                  : appBgLight
-              : null,
-          border: isLinux && !isWeb
-              ? context.isDarkMode
-                  ? const Border(
-                      top: BorderSide(color: Colors.transparent),
-                      left: BorderSide(color: Color.fromARGB(255, 74, 74, 74)),
-                      right: BorderSide(color: Colors.transparent),
-                      bottom: BorderSide(color: Colors.transparent),
-                    )
-                  : const Border(
-                      top: BorderSide(color: Colors.transparent),
-                      left:
-                          BorderSide(color: Color.fromARGB(255, 222, 222, 222)),
-                      right: BorderSide(color: Colors.transparent),
-                      bottom: BorderSide(color: Colors.transparent),
-                    )
-              : null,
-        ),
+            // color: isLinux == true
+            //     ? context.isDarkMode
+            //         ? appBgDark
+            //         : appBgLight
+            //     : null,
+            // border: isLinux == true
+            //     ? context.isDarkMode
+            //         ? const Border(
+            //             top: BorderSide(color: Colors.transparent),
+            //             left: BorderSide(color: Color.fromARGB(255, 74, 74, 74)),
+            //             right: BorderSide(color: Colors.transparent),
+            //             bottom: BorderSide(color: Colors.transparent),
+            //           )
+            //         : const Border(
+            //             top: BorderSide(color: Colors.transparent),
+            //             left:
+            //                 BorderSide(color: Color.fromARGB(255, 222, 222, 222)),
+            //             right: BorderSide(color: Colors.transparent),
+            //             bottom: BorderSide(color: Colors.transparent),
+            //           )
+            //     : null,
+            ),
         child: Center(
           child: Container(
             constraints: const BoxConstraints(maxWidth: 600),
-            color: isLinux && !isWeb
-                ? context.isDarkMode
-                    ? appBgDark
-                    : appBgLight
-                : null,
+            // color: isLinux
+            //     ? context.isDarkMode
+            //         ? appBgDark
+            //         : appBgLight
+            //     : null,
             child: const PasswordGeneratorPage(),
           ),
         ),

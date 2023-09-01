@@ -28,29 +28,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-          border: isLinux && !isWeb
-              ? context.isDarkMode
-                  ? const Border(
-                      top: BorderSide(color: Colors.transparent),
-                      left: BorderSide(color: Color.fromARGB(255, 74, 74, 74)),
-                      right: BorderSide(color: Colors.transparent),
-                      bottom: BorderSide(color: Colors.transparent),
-                    )
-                  : const Border(
-                      top: BorderSide(color: Colors.transparent),
-                      left:
-                          BorderSide(color: Color.fromARGB(255, 222, 222, 222)),
-                      right: BorderSide(color: Colors.transparent),
-                      bottom: BorderSide(color: Colors.transparent),
-                    )
-              : null,
-        ),
+            // border: isLinux
+            //     ? context.isDarkMode
+            //         ? const Border(
+            //             top: BorderSide(color: Colors.transparent),
+            //             left: BorderSide(color: Color.fromARGB(255, 74, 74, 74)),
+            //             right: BorderSide(color: Colors.transparent),
+            //             bottom: BorderSide(color: Colors.transparent),
+            //           )
+            //         : const Border(
+            //             top: BorderSide(color: Colors.transparent),
+            //             left:
+            //                 BorderSide(color: Color.fromARGB(255, 222, 222, 222)),
+            //             right: BorderSide(color: Colors.transparent),
+            //             bottom: BorderSide(color: Colors.transparent),
+            //           )
+            //     : null,
+            ),
         child: Container(
-          color: isLinux && !isWeb
-              ? context.isDarkMode
-                  ? appBgDark
-                  : appBgLight
-              : null,
+          // color: isLinux
+          //     ? context.isDarkMode
+          //         ? appBgDark
+          //         : appBgLight
+          //     : null,
           child: ListView(
             children: <Widget>[
               ThemeSection(
@@ -59,15 +59,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(
                 height: 10,
               ),
-              // const OptionsSection(),
+              const OptionsSection(),
               const SizedBox(
                 height: 10,
               ),
-              // const CollaborateSection(),
+              const CollaborateSection(),
               const SizedBox(
                 height: 10,
               ),
-              // const VersionSection(),
+              const VersionSection(),
               const SizedBox(
                 height: 10,
               )
@@ -79,9 +79,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 }
 
-// launchExternalLink(linkUrl) async {
-//   final Uri url = Uri.parse(linkUrl);
-//   if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-//     throw Exception('Could not launch $url');
-//   }
-// }
+launchExternalLink(linkUrl) async {
+  final Uri url = Uri.parse(linkUrl);
+  if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+    throw Exception('Could not launch $url');
+  }
+}

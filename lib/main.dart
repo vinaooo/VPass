@@ -1,29 +1,30 @@
-//import 'package:dynamic_color/dynamic_color.dart'; //testeweb
+import 'package:dynamic_color/dynamic_color.dart'; //testeweb
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-//import 'package:google_mobile_ads/google_mobile_ads.dart'; //testeweb
+import 'package:google_mobile_ads/google_mobile_ads.dart'; //testeweb
 import 'dart:core';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'globals.dart';
 import 'home.dart';
-// import 'settings/version.dart';
+import 'settings/version.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await PackageInfoUtils.initPackageInfo();
+  await PackageInfoUtils.initPackageInfo();
 
-  //DesktopWindow.setMinWindowSize(const Size(784, 820));
-  if (isLinux == true && !isWeb) {
-    systemIsDesktop = true;
-    // DesktopWindow.setWindowSize(const Size(784, 850));
-  } else {
-    systemIsDesktop == false;
+  if (isWeb == false) {
+    if (isLinux == true) {
+      systemIsDesktop = true;
+      // DesktopWindow.setWindowSize(const Size(784, 850));
+    } else {
+      systemIsDesktop == false;
+    }
+
+    if (isAndroid == true) {
+      MobileAds.instance.initialize();
+    }
   }
-
-  // if (isAndroid && !isWeb) {            //testeweb
-  //   MobileAds.instance.initialize();
-  // }
 
   runApp(
     const Vpass(),
@@ -152,78 +153,77 @@ class _VpassState extends State<Vpass> {
     }
   }
 
-  // final Color _brandBlue = const Color(0xFF1E88E5);
+  final Color _brandBlue = const Color(0xFF1E88E5);
   @override
   Widget build(BuildContext context) {
-    //if (isWeb) {
-    return MaterialApp(
-      themeMode: themeMode,
-      theme: ThemeData(
-        colorSchemeSeed: localAccentColor != 10 ? colorSelected.color : null,
-        // colorScheme: localAccentColor == 10 ? lightDynamic : null,
-        useMaterial3: true,
-        brightness: Brightness.light,
-      ),
-      darkTheme: ThemeData(
-        colorSchemeSeed: localAccentColor != 10 ? colorSelected.color : null,
-        // colorScheme: localAccentColor == 10 ? darkDynamic : null,
-        useMaterial3: true,
-        brightness: Brightness.dark,
-      ),
-      home: Home(
-        useLightMode: useLightMode,
-        colorSelected: colorSelected,
-        handleBrightnessChange: handleBrightnessChange,
-        handleColorSelect: handleColorSelect,
-      ),
-    );
-    // }
-    // else { //testeweb
-    //   return DynamicColorBuilder(
-    //     builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
-    //       ColorScheme lightColorScheme;
-    //       ColorScheme darkColorScheme;
+    if (isWeb == true) {
+      return MaterialApp(
+        themeMode: themeMode,
+        theme: ThemeData(
+          colorSchemeSeed: localAccentColor != 10 ? colorSelected.color : null,
+          // colorScheme: localAccentColor == 10 ? lightDynamic : null,
+          useMaterial3: true,
+          brightness: Brightness.light,
+        ),
+        darkTheme: ThemeData(
+          colorSchemeSeed: localAccentColor != 10 ? colorSelected.color : null,
+          // colorScheme: localAccentColor == 10 ? darkDynamic : null,
+          useMaterial3: true,
+          brightness: Brightness.dark,
+        ),
+        home: Home(
+          useLightMode: useLightMode,
+          colorSelected: colorSelected,
+          handleBrightnessChange: handleBrightnessChange,
+          handleColorSelect: handleColorSelect,
+        ),
+      );
+    } else {
+      return DynamicColorBuilder(
+        builder: (ColorScheme? lightDynamic, ColorScheme? darkDynamic) {
+          ColorScheme lightColorScheme;
+          ColorScheme darkColorScheme;
 
-    //       if (lightDynamic != null && darkDynamic != null) {
-    //         lightColorScheme = lightDynamic.harmonized();
-    //         lightColorScheme = lightColorScheme.copyWith(secondary: _brandBlue);
-    //         darkColorScheme = darkDynamic.harmonized();
-    //         darkColorScheme = darkColorScheme.copyWith(secondary: _brandBlue);
-    //       } else {
-    //         lightColorScheme = ColorScheme.fromSeed(
-    //           seedColor: _brandBlue,
-    //         );
-    //         darkColorScheme = ColorScheme.fromSeed(
-    //           seedColor: _brandBlue,
-    //           brightness: Brightness.dark,
-    //         );
-    //       }
+          if (lightDynamic != null && darkDynamic != null) {
+            lightColorScheme = lightDynamic.harmonized();
+            lightColorScheme = lightColorScheme.copyWith(secondary: _brandBlue);
+            darkColorScheme = darkDynamic.harmonized();
+            darkColorScheme = darkColorScheme.copyWith(secondary: _brandBlue);
+          } else {
+            lightColorScheme = ColorScheme.fromSeed(
+              seedColor: _brandBlue,
+            );
+            darkColorScheme = ColorScheme.fromSeed(
+              seedColor: _brandBlue,
+              brightness: Brightness.dark,
+            );
+          }
 
-    //       return MaterialApp(
-    //         themeMode: themeMode,
-    //         theme: ThemeData(
-    //           colorSchemeSeed:
-    //               localAccentColor != 10 ? colorSelected.color : null,
-    //           colorScheme: localAccentColor == 10 ? lightDynamic : null,
-    //           useMaterial3: true,
-    //           brightness: Brightness.light,
-    //         ),
-    //         darkTheme: ThemeData(
-    //           colorSchemeSeed:
-    //               localAccentColor != 10 ? colorSelected.color : null,
-    //           colorScheme: localAccentColor == 10 ? darkDynamic : null,
-    //           useMaterial3: true,
-    //           brightness: Brightness.dark,
-    //         ),
-    //         home: Home(
-    //           useLightMode: useLightMode,
-    //           colorSelected: colorSelected,
-    //           handleBrightnessChange: handleBrightnessChange,
-    //           handleColorSelect: handleColorSelect,
-    //         ),
-    //       );
-    //     },
-    //   );
-    // }
+          return MaterialApp(
+            themeMode: themeMode,
+            theme: ThemeData(
+              colorSchemeSeed:
+                  localAccentColor != 10 ? colorSelected.color : null,
+              colorScheme: localAccentColor == 10 ? lightDynamic : null,
+              useMaterial3: true,
+              brightness: Brightness.light,
+            ),
+            darkTheme: ThemeData(
+              colorSchemeSeed:
+                  localAccentColor != 10 ? colorSelected.color : null,
+              colorScheme: localAccentColor == 10 ? darkDynamic : null,
+              useMaterial3: true,
+              brightness: Brightness.dark,
+            ),
+            home: Home(
+              useLightMode: useLightMode,
+              colorSelected: colorSelected,
+              handleBrightnessChange: handleBrightnessChange,
+              handleColorSelect: handleColorSelect,
+            ),
+          );
+        },
+      );
+    }
   }
 }
