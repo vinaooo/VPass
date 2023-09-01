@@ -1,9 +1,10 @@
-import 'dart:io';
-import 'dart:core';
+//import 'dart:core';
+
+import 'globals.dart';
 
 class AdHelper {
   static String get bannerAdUnitId {
-    if (Platform.isAndroid) {
+    if (isAndroid && !isWeb) {
       return 'ca-app-pub-4860380403931913/9133315995';
     }
     // else if (Platform.isIOS) {

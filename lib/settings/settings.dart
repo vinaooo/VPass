@@ -28,7 +28,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Expanded(
       child: Container(
         decoration: BoxDecoration(
-          border: isLinux
+          border: isLinux && !isWeb
               ? context.isDarkMode
                   ? const Border(
                       top: BorderSide(color: Colors.transparent),
@@ -46,7 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               : null,
         ),
         child: Container(
-          color: isLinux
+          color: isLinux && !isWeb
               ? context.isDarkMode
                   ? appBgDark
                   : appBgLight
@@ -59,15 +59,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               const SizedBox(
                 height: 10,
               ),
-              const OptionsSection(),
+              // const OptionsSection(),
               const SizedBox(
                 height: 10,
               ),
-              const CollaborateSection(),
+              // const CollaborateSection(),
               const SizedBox(
                 height: 10,
               ),
-              const VersionSection(),
+              // const VersionSection(),
               const SizedBox(
                 height: 10,
               )
@@ -79,9 +79,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 }
 
-launchExternalLink(linkUrl) async {
-  final Uri url = Uri.parse(linkUrl);
-  if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-    throw Exception('Could not launch $url');
-  }
-}
+// launchExternalLink(linkUrl) async {
+//   final Uri url = Uri.parse(linkUrl);
+//   if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+//     throw Exception('Could not launch $url');
+//   }
+// }

@@ -11,16 +11,13 @@ dependencies:
   flutter:
     sdk: flutter
 
-  dynamic_color:    #não funciona
   crypto: ^3.0.2
   convert: ^3.1.1
   shared_preferences: ^2.1.0
-  google_mobile_ads: ^3.0.0  #não funciona
   package_info_plus: ^4.0.0
   fluttericon: ^2.0.0
   url_launcher: ^6.1.10
   material_color_utilities: 
-  flutter_launcher_icons: ^0.13.1 #não funciona
   device_info_plus: ^9.0.2
 
 dev_dependencies:

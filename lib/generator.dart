@@ -7,7 +7,7 @@ import 'dart:core';
 
 import 'globals.dart';
 import 'home.dart';
-import 'settings/privacyandtos.dart';
+// import 'settings/privacyandtos.dart';
 
 class PasswordGenerator extends StatefulWidget {
   const PasswordGenerator({super.key});
@@ -28,12 +28,12 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
     Widget schemeView(ThemeData theme) {
       return Container(
         decoration: BoxDecoration(
-          color: isLinux
+          color: isLinux && !isWeb
               ? context.isDarkMode
                   ? appBgDark
                   : appBgLight
               : null,
-          border: isLinux
+          border: isLinux && !isWeb
               ? context.isDarkMode
                   ? const Border(
                       top: BorderSide(color: Colors.transparent),
@@ -53,7 +53,7 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
         child: Center(
           child: Container(
             constraints: const BoxConstraints(maxWidth: 600),
-            color: isLinux
+            color: isLinux && !isWeb
                 ? context.isDarkMode
                     ? appBgDark
                     : appBgLight
@@ -288,19 +288,19 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      showCustomAlertDialog(); // Chama a função para exibir o AlertDialog
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   showCustomAlertDialog(); // Chama a função para exibir o AlertDialog
+    // });
   }
 
-  void showCustomAlertDialog() async {
-    if (!alertDialogShown) {
-      await CustomAlertDialog.show(context);
-      setState(() {
-        alertDialogShown = true; // Marca que o AlertDialog foi mostrado
-      });
-    }
-  }
+  // void showCustomAlertDialog() async {
+  //   if (!alertDialogShown) {
+  //     await CustomAlertDialog.show(context);
+  //     setState(() {
+  //       alertDialogShown = true; // Marca que o AlertDialog foi mostrado
+  //     });
+  //   }
+  // }
 
   bool aliasObscure = false;
   bool secretObscure = false;

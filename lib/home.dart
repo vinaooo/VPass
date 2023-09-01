@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:core';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart'; //testeweb
 
 import 'settings/settings.dart';
 import 'generator.dart';
 import 'globals.dart';
 import 'animations.dart';
-import 'ad_helper.dart';
+// import 'ad_helper.dart';
 
 class Home extends StatefulWidget {
   const Home({
@@ -39,8 +39,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   int screenWidth = 0;
   double screenHeight = 0;
 
-  BannerAd? bannerAd;
-  bool _isLoaded = false;
+  // BannerAd? bannerAd; //testeweb
+  // bool _isLoaded = false;
 
   @override
   initState() {
@@ -79,45 +79,48 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   bool isLoaded = false;
 
-  void _loadAd() async {
-    // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
-    final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-        MediaQuery.of(context).size.width.truncate());
+  // void _loadAd() async { //testeweb
+  //   if (!isWeb) {
+  //     // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
+  //     final size =
+  //         await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+  //             MediaQuery.of(context).size.width.truncate());
 
-    if (size == null) {
-      // Unable to get width of anchored banner.
-      return;
-    }
-    BannerAd(
-      adUnitId: AdHelper.bannerAdUnitId,
-      request: const AdRequest(),
-      size: size,
-      listener: BannerAdListener(
-        // Called when an ad is successfully received.
-        onAdLoaded: (ad) {
-          setState(() {
-            bannerAd = ad as BannerAd;
-            _isLoaded = true;
-          });
-        },
-        // Called when an ad request failed.
-        onAdFailedToLoad: (ad, err) {
-          ad.dispose();
-        },
-        // Called when an ad opens an overlay that covers the screen.
-        onAdOpened: (Ad ad) {},
-        // Called when an ad removes an overlay that covers the screen.
-        onAdClosed: (Ad ad) {},
-        // Called when an impression occurs on the ad.
-        onAdImpression: (Ad ad) {},
-      ),
-    ).load();
-  }
+  //     if (size == null) {
+  //       // Unable to get width of anchored banner.
+  //       return;
+  //     }
+  //     BannerAd(
+  //       adUnitId: AdHelper.bannerAdUnitId,
+  //       request: const AdRequest(),
+  //       size: size,
+  //       listener: BannerAdListener(
+  //         // Called when an ad is successfully received.
+  //         onAdLoaded: (ad) {
+  //           setState(() {
+  //             bannerAd = ad as BannerAd;
+  //             _isLoaded = true;
+  //           });
+  //         },
+  //         // Called when an ad request failed.
+  //         onAdFailedToLoad: (ad, err) {
+  //           ad.dispose();
+  //         },
+  //         // Called when an ad opens an overlay that covers the screen.
+  //         onAdOpened: (Ad ad) {},
+  //         // Called when an ad removes an overlay that covers the screen.
+  //         onAdClosed: (Ad ad) {},
+  //         // Called when an impression occurs on the ad.
+  //         onAdImpression: (Ad ad) {},
+  //       ),
+  //     ).load();
+  //   }
+  // }
 
   @override
   void dispose() {
     controller.dispose();
-    if (isAndroid) bannerAd?.dispose();
+    // if (isAndroid && !isWeb) bannerAd?.dispose(); //testeweb
     // if (isAndroid) bannerAd?.dispose();
     super.dispose();
   }
@@ -129,10 +132,10 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     final double width = MediaQuery.of(context).size.width;
     final AnimationStatus status = controller.status;
 
-    _isLoaded = false;
-    if (isAndroid) {
-      _loadAd();
-    }
+    // _isLoaded = false; //testeweb
+    // if (isAndroid && !isWeb) {
+    //   _loadAd();
+    // }
 
     if (systemIsDesktop == true) {
       showMediumSizeLayout = false;
@@ -191,13 +194,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     //bannerAd = null; //remove ad banner to test and prints
 
-    if (isAndroid) {
-      if (bannerAd != null) {
-        adHeight = 80 + bannerAd!.size.height.toDouble();
-      } else {
-        adHeight = 80;
-      }
-    }
+    // if (isAndroid && !isWeb) { //testeweb
+    //   if (bannerAd != null) {
+    //     adHeight = 80 + bannerAd!.size.height.toDouble();
+    //   } else {
+    //     adHeight = 80;
+    //   }
+    // }
 
     return NavigationTransition(
       scaffoldKey: scaffoldKey,
@@ -206,7 +209,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       body: createScreenFor(ScreenSelected.values[screenIndex]),
       navigationRail: NavigationRail(
         extended: true,
-        backgroundColor: isLinux
+        backgroundColor: isLinux && !isWeb
             ? context.isDarkMode
                 ? const Color.fromARGB(255, 44, 44, 44)
                 : const Color.fromARGB(255, 250, 250, 250)
@@ -234,25 +237,26 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       navigationBar: Focus(
         autofocus: true,
         child: Container(
-          height: bannerAd == null ? 80 : adHeight,
+          height: 80,
+          // height: bannerAd == null ? 80 : adHeight, //testeweb
           alignment: Alignment.center,
           child: Column(
             children: [
-              Stack(
-                children: [
-                  if (bannerAd != null && _isLoaded)
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: SafeArea(
-                        child: SizedBox(
-                          width: bannerAd!.size.width.toDouble(),
-                          height: bannerAd!.size.height.toDouble(),
-                          child: AdWidget(ad: bannerAd!),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
+              // Stack( //testeweb
+              //   children: [
+              //     if (bannerAd != null && _isLoaded)
+              //       Align(
+              //         alignment: Alignment.bottomCenter,
+              //         child: SafeArea(
+              //           child: SizedBox(
+              //             width: bannerAd!.size.width.toDouble(),
+              //             height: bannerAd!.size.height.toDouble(),
+              //             child: AdWidget(ad: bannerAd!),
+              //           ),
+              //         ),
+              //       ),
+              //   ],
+              // ),
 
               // SizedBox(
               //   width: bannerAd == null ? 0 : bannerAd?.size.width.toDouble(),
@@ -322,12 +326,12 @@ class _CardCreatorState extends State<CardCreator> {
             ),
             Card(
               margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              shape: isLinux
+              shape: isLinux && !isWeb
                   ? RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     )
                   : null,
-              color: isLinux
+              color: isLinux && !isWeb
                   ? context.isDarkMode
                       ? cardColorDark
                       : const Color.fromARGB(255, 250, 250, 250)
