@@ -45,7 +45,6 @@ class NavigationTransition extends StatefulWidget {
       required this.railAnimation,
       required this.navigationRail,
       required this.navigationBar,
-      required this.appBar,
       required this.body});
 
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -53,7 +52,6 @@ class NavigationTransition extends StatefulWidget {
   final CurvedAnimation railAnimation;
   final Widget navigationRail;
   final Widget navigationBar;
-  final appBar;
   final Widget body;
 
   @override
@@ -87,7 +85,10 @@ class _NavigationTransitionState extends State<NavigationTransition> {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       key: widget.scaffoldKey,
-      appBar: widget.appBar,
+      appBar: AppBar(
+        title: const Text('VPass'),
+        centerTitle: true,
+      ),
       body: Row(
         children: <Widget>[
           RailTransition(

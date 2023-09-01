@@ -31,8 +31,9 @@ enum ColorSeed {
 
 Color passwordCardColor(int securityNoPass, context, bool isDark) {
   if (securityNoPass == 0) {
-    return Color(Blend.harmonize(
-        Theme.of(context).colorScheme.error.value, cardColorDark.value));
+    return Colors.red;
+    // Color(Blend.harmonize(
+    //     Theme.of(context).colorScheme.error.value, cardColorDark.value));
   } else if (securityNoPass == 1) {
     return Color(Blend.harmonize(Colors.red.value, cardColorDark.value));
   } else if (securityNoPass == 2) {
@@ -45,7 +46,7 @@ Color passwordCardColor(int securityNoPass, context, bool isDark) {
     return Color(Blend.harmonize(Colors.amber.value, cardColorDark.value));
   } else if (securityNoPass == 5) {
     return Color(
-        Blend.harmonize(const Color(0xffde0600).value, cardColorDark.value));
+        Blend.harmonize(Colors.amberAccent.value, cardColorDark.value));
   } else if (securityNoPass == 6) {
     return Color(Blend.harmonize(Colors.yellow.value, cardColorDark.value));
   } else if (securityNoPass == 7) {

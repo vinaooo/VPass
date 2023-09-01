@@ -2,7 +2,7 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:vpass/settings/versionsection.dart';
+import 'package:vpass/settings/aboutsection.dart';
 
 import 'collaborate.dart';
 import '../globals.dart';
@@ -68,6 +68,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 height: 10,
               ),
               const VersionSection(),
+              const SizedBox(
+                height: 10,
+              )
             ],
           ),
         ),
@@ -76,20 +79,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 }
 
-launchTelegram() async {
-  const url = 'https://t.me/vinaoooo';
-  if (await canLaunchUrl(Uri.parse(url))) {
-    await launchUrl(Uri.parse(url));
-  } else {
-    throw 'Could not launch $url';
-  }
-}
-
-launchGithub() async {
-  const url = 'https://github.com/vinaooo/vpass';
-  if (await canLaunchUrl(Uri.parse(url))) {
-    await launchUrl(Uri.parse(url));
-  } else {
-    throw 'Could not launch $url';
+launchExternalLink(linkUrl) async {
+  final Uri url = Uri.parse(linkUrl);
+  if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+    throw Exception('Could not launch $url');
   }
 }

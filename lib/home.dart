@@ -12,18 +12,14 @@ class Home extends StatefulWidget {
   const Home({
     super.key,
     required this.useLightMode,
-    required this.useMaterial3,
     required this.colorSelected,
     required this.handleBrightnessChange,
-    required this.handleMaterialVersionChange,
     required this.handleColorSelect,
   });
 
   final bool useLightMode;
-  final bool useMaterial3;
   final ColorSeed colorSelected;
   final void Function(bool useLightMode) handleBrightnessChange;
-  final void Function() handleMaterialVersionChange;
   final void Function(int value) handleColorSelect;
 
   @override
@@ -39,30 +35,37 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   bool showLargeSizeLayout = false;
 
   int screenIndex = ScreenSelected.passGenerator.value;
+
+  int screenWidth = 0;
+  double screenHeight = 0;
+
   BannerAd? bannerAd;
+  bool _isLoaded = false;
+
   @override
   initState() {
     super.initState();
-    if (isAndroid == true) {
-      BannerAd(
-        adUnitId: AdHelper.bannerAdUnitId,
-        size: AdSize.fullBanner,
-        request: const AdRequest(),
-        listener: BannerAdListener(
-          onAdLoaded: (ad) {
-            setState(() {
-              bannerAd = ad as BannerAd;
-            });
-          },
-          onAdFailedToLoad: (ad, error) {
-            // Releases an ad resource when it fails to load
-            ad.dispose();
-            debugPrint(
-                'Ad load failed (code=${error.code} message=${error.message})');
-          },
-        ),
-      ).load();
-    }
+
+    // if (isAndroid) {
+    //   BannerAd(
+    //     adUnitId: AdHelper.bannerAdUnitId,
+    //     size: AdSize(width: screenWidth, height: screenHeight.toInt()),
+    //     request: const AdRequest(),
+    //     listener: BannerAdListener(
+    //       onAdLoaded: (ad) {
+    //         setState(() {
+    //           bannerAd = ad as BannerAd;
+    //         });
+    //       },
+    //       onAdFailedToLoad: (ad, error) {
+    //         // Releases an ad resource when it fails to load
+    //         ad.dispose();
+    //         debugPrint(
+    //             'Ad load failed (code=${error.code} message=${error.message})');
+    //       },
+    //     ),
+    //   ).load();
+    // }
     controller = AnimationController(
       duration: Duration(milliseconds: transitionLength.toInt() * 2),
       value: 0,
@@ -74,10 +77,48 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     );
   }
 
+  bool isLoaded = false;
+
+  void _loadAd() async {
+    // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
+    final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+        MediaQuery.of(context).size.width.truncate());
+
+    if (size == null) {
+      // Unable to get width of anchored banner.
+      return;
+    }
+    BannerAd(
+      adUnitId: AdHelper.bannerAdUnitId,
+      request: const AdRequest(),
+      size: size,
+      listener: BannerAdListener(
+        // Called when an ad is successfully received.
+        onAdLoaded: (ad) {
+          setState(() {
+            bannerAd = ad as BannerAd;
+            _isLoaded = true;
+          });
+        },
+        // Called when an ad request failed.
+        onAdFailedToLoad: (ad, err) {
+          ad.dispose();
+        },
+        // Called when an ad opens an overlay that covers the screen.
+        onAdOpened: (Ad ad) {},
+        // Called when an ad removes an overlay that covers the screen.
+        onAdClosed: (Ad ad) {},
+        // Called when an impression occurs on the ad.
+        onAdImpression: (Ad ad) {},
+      ),
+    ).load();
+  }
+
   @override
   void dispose() {
     controller.dispose();
-    bannerAd?.dispose();
+    if (isAndroid) bannerAd?.dispose();
+    // if (isAndroid) bannerAd?.dispose();
     super.dispose();
   }
 
@@ -87,6 +128,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
     final double width = MediaQuery.of(context).size.width;
     final AnimationStatus status = controller.status;
+
+    _isLoaded = false;
+    if (isAndroid) {
+      _loadAd();
+    }
 
     if (systemIsDesktop == true) {
       showMediumSizeLayout = false;
@@ -144,7 +190,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     //bannerAd = null; //remove ad banner to test and prints
-    if (isAndroid == true) {
+
+    if (isAndroid) {
       if (bannerAd != null) {
         adHeight = 80 + bannerAd!.size.height.toDouble();
       } else {
@@ -156,12 +203,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       scaffoldKey: scaffoldKey,
       animationController: controller,
       railAnimation: railAnimation,
-      appBar: isAndroid == true
-          ? AppBar(
-              title: const Text('VPass'),
-              centerTitle: true,
-            )
-          : null,
       body: createScreenFor(ScreenSelected.values[screenIndex]),
       navigationRail: NavigationRail(
         extended: true,
@@ -193,41 +234,59 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       navigationBar: Focus(
         autofocus: true,
         child: Container(
-            height: bannerAd == null ? 110 : adHeight,
-            alignment: Alignment.center,
-            child: Column(
-              children: [
-                SizedBox(
-                  width: bannerAd == null ? 0 : bannerAd?.size.width.toDouble(),
-                  height:
-                      bannerAd == null ? 30 : bannerAd?.size.height.toDouble(),
-                  child: bannerAd != null
-                      ? AdWidget(ad: bannerAd!)
-                      : const Text('Sad to see you using an adblocker!'),
-                ),
-                NavigationBar(
-                  selectedIndex: screenIndex,
-                  onDestinationSelected: (index) {
-                    setState(() {
-                      screenIndex = index;
-                    });
-                    screenIndex = screenIndex;
-                  },
-                  destinations: const [
-                    NavigationDestination(
-                      icon: Icon(Icons.password_outlined),
-                      label: 'Generator',
-                      selectedIcon: Icon(Icons.password),
+          height: bannerAd == null ? 80 : adHeight,
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              Stack(
+                children: [
+                  if (bannerAd != null && _isLoaded)
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: SafeArea(
+                        child: SizedBox(
+                          width: bannerAd!.size.width.toDouble(),
+                          height: bannerAd!.size.height.toDouble(),
+                          child: AdWidget(ad: bannerAd!),
+                        ),
+                      ),
                     ),
-                    NavigationDestination(
-                      icon: Icon(Icons.settings_outlined),
-                      label: 'Settings',
-                      selectedIcon: Icon(Icons.settings),
-                    ),
-                  ],
-                ),
-              ],
-            )),
+                ],
+              ),
+
+              // SizedBox(
+              //   width: bannerAd == null ? 0 : bannerAd?.size.width.toDouble(),
+              //   height:
+              //       bannerAd == null ? 30 : bannerAd?.size.height.toDouble(),
+              //   child: bannerAd != null
+              //       ? AdWidget(ad: bannerAd!)
+              //       : const Text('Sad to see you using an adblocker!'),
+              // ),
+
+              NavigationBar(
+                selectedIndex: screenIndex,
+                onDestinationSelected: (index) {
+                  setState(() {
+                    screenIndex = index;
+                  });
+                  screenIndex = screenIndex;
+                },
+                destinations: const [
+                  NavigationDestination(
+                    icon: Icon(Icons.password_outlined),
+                    label: 'Generator',
+                    selectedIcon: Icon(Icons.password),
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.settings_outlined),
+                    label: 'Settings',
+                    selectedIcon: Icon(Icons.settings),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -250,44 +309,33 @@ class CardCreator extends StatefulWidget {
 }
 
 class _CardCreatorState extends State<CardCreator> {
-  final focusNode = FocusNode();
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(15, 5, 15, 0),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints.tightFor(width: widthConstraint),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(4, 10, 0, 10),
-                  child: Text(widget.title),
-                ),
-                Card(
-                  shape: isLinux
-                      ? RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        )
-                      : null,
-                  color: isLinux
-                      ? context.isDarkMode
-                          ? cardColorDark
-                          : const Color.fromARGB(255, 250, 250, 250)
-                      : null,
-                  elevation: 1,
-                  child: Column(
-                    children: [
-                      Center(child: widget.child),
-                    ],
-                  ),
-                ),
-              ],
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 10, 0, 0),
+              child: Text(widget.title),
             ),
-          ),
+            Card(
+              margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              shape: isLinux
+                  ? RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    )
+                  : null,
+              color: isLinux
+                  ? context.isDarkMode
+                      ? cardColorDark
+                      : const Color.fromARGB(255, 250, 250, 250)
+                  : null,
+              elevation: 1,
+              child: widget.child,
+            ),
+          ],
         ),
       ],
     );

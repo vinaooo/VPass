@@ -1,20 +1,13 @@
-// ignore_for_file: avoid_print
-
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto/crypto.dart';
 import 'package:convert/convert.dart';
 import 'dart:convert';
 import 'dart:core';
-// import 'package:loading_animation_widget/loading_animation_widget.dart';
-// import 'package:google_mobile_ads/google_mobile_ads.dart';
-// import 'dart:io' show Platform;
 
-// import 'ad_helper.dart';
-// import 'clipboard.dart';
 import 'globals.dart';
 import 'home.dart';
-import 'privacyandtos.dart';
+import 'settings/privacyandtos.dart';
 
 class PasswordGenerator extends StatefulWidget {
   const PasswordGenerator({super.key});
@@ -35,6 +28,11 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
     Widget schemeView(ThemeData theme) {
       return Container(
         decoration: BoxDecoration(
+          color: isLinux
+              ? context.isDarkMode
+                  ? appBgDark
+                  : appBgLight
+              : null,
           border: isLinux
               ? context.isDarkMode
                   ? const Border(
@@ -52,13 +50,16 @@ class _PasswordGeneratorState extends State<PasswordGenerator> {
                     )
               : null,
         ),
-        child: Container(
-          color: isLinux
-              ? context.isDarkMode
-                  ? appBgDark
-                  : appBgLight
-              : null,
-          child: const PasswordGeneratorPage(),
+        child: Center(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 600),
+            color: isLinux
+                ? context.isDarkMode
+                    ? appBgDark
+                    : appBgLight
+                : null,
+            child: const PasswordGeneratorPage(),
+          ),
         ),
       );
     }
@@ -217,13 +218,13 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
   }
 
   String textNoPass() {
-    print('textnopass 1');
+    // print('textnopass 1');
     if (aliasText != "" || secretText != "") {
-      print('textnopass 2');
+      // print('textnopass 2');
       return pwValue(aliasText, secretText);
     }
 
-    print('textnopass 3');
+    // print('textnopass 3');
     return " Please type Alias or Secret!\n";
   }
 
@@ -579,35 +580,38 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceEvenly,
                                           children: <Widget>[
-                                            Row(children: <Widget>[
-                                              Expanded(
-                                                  flex: 2,
-                                                  child: Slider(
-                                                      value: currentSliderValue
-                                                          .round()
-                                                          .toDouble(),
-                                                      min: 6,
-                                                      max: 128,
-                                                      onChanged: speCharSwitch ==
-                                                                  false &&
-                                                              numberSwitch ==
-                                                                  false &&
-                                                              lettersSwitch ==
-                                                                  false
-                                                          ? null
-                                                          : aliasValidator ==
-                                                                      false &&
-                                                                  secretValidator ==
-                                                                      false
-                                                              ? null
-                                                              : (double
-                                                                      value) =>
-                                                                  {
-                                                                    setState(() =>
-                                                                        currentSliderValue =
-                                                                            value.toInt())
-                                                                  }))
-                                            ]),
+                                            Row(
+                                              children: <Widget>[
+                                                Expanded(
+                                                    flex: 2,
+                                                    child: Slider(
+                                                        value:
+                                                            currentSliderValue
+                                                                .round()
+                                                                .toDouble(),
+                                                        min: 6,
+                                                        max: 128,
+                                                        onChanged: speCharSwitch ==
+                                                                    false &&
+                                                                numberSwitch ==
+                                                                    false &&
+                                                                lettersSwitch ==
+                                                                    false
+                                                            ? null
+                                                            : aliasValidator ==
+                                                                        false &&
+                                                                    secretValidator ==
+                                                                        false
+                                                                ? null
+                                                                : (double
+                                                                        value) =>
+                                                                    {
+                                                                      setState(() =>
+                                                                          currentSliderValue =
+                                                                              value.toInt())
+                                                                    }))
+                                              ],
+                                            ),
                                             Row(
                                               children: <Widget>[
                                                 Expanded(
@@ -621,9 +625,9 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
                                                     title: const Text(
                                                       'Special Characters',
                                                     ),
-                                                    subtitle: Text(
-                                                        "$aliasValidator @#% characters into your password $secretValidator",
-                                                        style: const TextStyle(
+                                                    subtitle: const Text(
+                                                        "@#% characters into your password",
+                                                        style: TextStyle(
                                                             fontSize: 12)),
                                                     value: speCharSwitch,
                                                     onChanged: aliasValidator ==
@@ -756,6 +760,9 @@ ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzz0123456789!@#\$%^&*()_+-=[]
                               ],
                             ),
                           ),
+                          const SizedBox(
+                            height: 10,
+                          )
                         ],
                       ),
                     ),

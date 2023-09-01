@@ -1,18 +1,13 @@
-// ignore_for_file: avoid_print,
-
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-//import 'package:desktop_window/desktop_window.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:core';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:adwaita/adwaita.dart';
-//import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'globals.dart';
 import 'home.dart';
 import 'settings/version.dart';
-//import 'ad_helper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +20,10 @@ void main() async {
   } else {
     systemIsDesktop == false;
   }
-//  MobileAds.instance.initialize();
+
+  if (isAndroid) {
+    MobileAds.instance.initialize();
+  }
 
   runApp(
     const Vpass(),
@@ -41,7 +39,6 @@ class Vpass extends StatefulWidget {
 
 class _VpassState extends State<Vpass> {
   String localThemeBrightness = '';
-  bool useMaterial3 = true;
 
   ThemeMode themeMode = ThemeMode.system;
   ColorSeed colorSelected = ColorSeed.baseColor;
@@ -122,12 +119,6 @@ class _VpassState extends State<Vpass> {
     });
   }
 
-  void handleMaterialVersionChange() {
-    setState(() {
-      useMaterial3 = !useMaterial3;
-    });
-  }
-
   void handleColorSelect(int value) {
     setState(
       () {
@@ -171,21 +162,11 @@ class _VpassState extends State<Vpass> {
         ColorScheme darkColorScheme;
 
         if (lightDynamic != null && darkDynamic != null) {
-          // On Android S+ devices, use the provided dynamic color scheme.
-          // (Recommended) Harmonize the dynamic color scheme' built-in semantic colors.
           lightColorScheme = lightDynamic.harmonized();
-          // (Optional) Customize the scheme as desired. For example, one might
-          // want to use a brand color to override the dynamic [ColorScheme.secondary].
           lightColorScheme = lightColorScheme.copyWith(secondary: _brandBlue);
-          // (Optional) If applicable, harmonize custom colors.
-
-          // Repeat for the dark color scheme.
           darkColorScheme = darkDynamic.harmonized();
           darkColorScheme = darkColorScheme.copyWith(secondary: _brandBlue);
-
-          //_isDemoUsingDynamicColors = true; // ignore, only for demo purposes
         } else {
-          // Otherwise, use fallback schemes.
           lightColorScheme = ColorScheme.fromSeed(
             seedColor: _brandBlue,
           );
@@ -195,42 +176,28 @@ class _VpassState extends State<Vpass> {
           );
         }
 
-        return ValueListenableBuilder<ThemeMode>(
-          valueListenable: themeNotifier,
-          builder: (_, ThemeMode currentMode, __) {
-            return MaterialApp(
-              title: 'VPass 7',
-              themeMode: themeMode,
-              theme: isLinux
-                  ? AdwaitaThemeData.light()
-                  : ThemeData(
-                      //scaffoldBackgroundColor: ,
-
-                      colorSchemeSeed:
-                          localAccentColor != 10 ? colorSelected.color : null,
-                      colorScheme: localAccentColor == 10 ? lightDynamic : null,
-                      useMaterial3: useMaterial3,
-                      brightness: Brightness.light,
-                    ),
-              darkTheme: isLinux
-                  ? AdwaitaThemeData.dark()
-                  : ThemeData(
-                      colorSchemeSeed:
-                          localAccentColor != 10 ? colorSelected.color : null,
-                      colorScheme: localAccentColor == 10 ? darkDynamic : null,
-                      useMaterial3: useMaterial3,
-                      brightness: Brightness.dark,
-                    ),
-              home: Home(
-                useLightMode: useLightMode,
-                useMaterial3: useMaterial3,
-                colorSelected: colorSelected,
-                handleBrightnessChange: handleBrightnessChange,
-                handleMaterialVersionChange: handleMaterialVersionChange,
-                handleColorSelect: handleColorSelect,
-              ),
-            );
-          },
+        return MaterialApp(
+          themeMode: themeMode,
+          theme: ThemeData(
+            colorSchemeSeed:
+                localAccentColor != 10 ? colorSelected.color : null,
+            colorScheme: localAccentColor == 10 ? lightDynamic : null,
+            useMaterial3: true,
+            brightness: Brightness.light,
+          ),
+          darkTheme: ThemeData(
+            colorSchemeSeed:
+                localAccentColor != 10 ? colorSelected.color : null,
+            colorScheme: localAccentColor == 10 ? darkDynamic : null,
+            useMaterial3: true,
+            brightness: Brightness.dark,
+          ),
+          home: Home(
+            useLightMode: useLightMode,
+            colorSelected: colorSelected,
+            handleBrightnessChange: handleBrightnessChange,
+            handleColorSelect: handleColorSelect,
+          ),
         );
       },
     );
