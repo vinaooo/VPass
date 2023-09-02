@@ -34,7 +34,12 @@ class _CollaborateSectionState extends State<CollaborateSection> {
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     padding: const EdgeInsets.all(0),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(roundCorner),
+                        topRight: Radius.zero,
+                        bottomLeft: Radius.zero,
+                        bottomRight: Radius.zero,
+                      ),
                     ),
                   ),
                   onPressed: null,
@@ -61,7 +66,12 @@ class _CollaborateSectionState extends State<CollaborateSection> {
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     padding: const EdgeInsets.all(0),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(0),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.zero,
+                        topRight: Radius.circular(roundCorner),
+                        bottomLeft: Radius.zero,
+                        bottomRight: Radius.zero,
+                      ),
                     ),
                   ),
                   onPressed: null,
@@ -94,7 +104,6 @@ class _CollaborateSectionState extends State<CollaborateSection> {
                     ),
                   ),
                   onPressed: null,
-                  // isLinux ? null : () {},
                   child: const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -145,9 +154,7 @@ class _CollaborateSectionState extends State<CollaborateSection> {
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.zero,
                         topRight: Radius.zero,
-                        // bottomLeft: isLinux
-                        //     ? const Radius.circular(12)
-                        //     : const Radius.circular(8),
+                        bottomLeft: Radius.circular(roundCorner),
                         bottomRight: Radius.zero,
                       ),
                     ),
@@ -210,9 +217,7 @@ class _CollaborateSectionState extends State<CollaborateSection> {
                         topLeft: Radius.zero,
                         topRight: Radius.zero,
                         bottomLeft: Radius.zero,
-                        // bottomRight: isLinux
-                        //     ? const Radius.circular(12)
-                        //     : const Radius.circular(8),
+                        bottomRight: Radius.circular(roundCorner),
                       ),
                     ),
                   ),

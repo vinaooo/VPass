@@ -1,7 +1,7 @@
-import 'package:dynamic_color/dynamic_color.dart'; //testeweb
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart'; //testeweb
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:core';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,17 +13,18 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await PackageInfoUtils.initPackageInfo();
 
-  if (isWeb == false) {
-    if (isLinux == true) {
-      systemIsDesktop = true;
-      // DesktopWindow.setWindowSize(const Size(784, 850));
-    } else {
-      systemIsDesktop == false;
-    }
+  Initialization plataformOrigin = Initialization();
+  plataformOrigin.platformTest();
 
-    if (isAndroid == true) {
-      MobileAds.instance.initialize();
-    }
+  if (isLinux == true) {
+    systemIsDesktop = true;
+    // DesktopWindow.setWindowSize(const Size(784, 850));
+  } else {
+    systemIsDesktop == false;
+  }
+
+  if (isAndroid == true) {
+    MobileAds.instance.initialize();
   }
 
   runApp(
@@ -158,6 +159,7 @@ class _VpassState extends State<Vpass> {
   Widget build(BuildContext context) {
     if (isWeb == true) {
       return MaterialApp(
+        title: "VPass",
         themeMode: themeMode,
         theme: ThemeData(
           colorSchemeSeed: localAccentColor != 10 ? colorSelected.color : null,
@@ -200,6 +202,7 @@ class _VpassState extends State<Vpass> {
           }
 
           return MaterialApp(
+            title: "VPass",
             themeMode: themeMode,
             theme: ThemeData(
               colorSchemeSeed:

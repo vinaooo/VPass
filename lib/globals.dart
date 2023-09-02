@@ -1,3 +1,4 @@
+import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:material_color_utilities/material_color_utilities.dart';
@@ -6,12 +7,26 @@ import 'dart:core';
 
 bool systemIsDesktop = false;
 
-bool isLinux = Platform.isLinux;
-bool isAndroid = Platform.isAndroid;
-bool isIos = Platform.isIOS;
+bool isLinux = false;
+bool isAndroid = false;
+bool isIos = false;
 bool isWeb = kIsWeb;
-bool isWindows = Platform.isWindows;
-bool isMacOS = Platform.isMacOS;
+bool isWindows = false;
+bool isMacOS = false;
+double roundCorner = 8;
+
+class Initialization {
+  platformTest() {
+    if (isWeb == false) {
+      if (Platform.isLinux) isLinux = true;
+      if (Platform.isAndroid) isAndroid = true;
+      if (Platform.isIOS) isIos = true;
+      if (Platform.isWindows) isWindows = true;
+      if (Platform.isMacOS) isMacOS = true;
+    }
+    if (isLinux || isWeb) roundCorner = 12;
+  }
+}
 
 enum ColorSeed {
   baseColor('M3 Baseline', Color(0xff6750a4)),
@@ -95,5 +110,12 @@ extension DarkMode on BuildContext {
   bool get isDarkMode {
     final brightness = MediaQuery.of(this).platformBrightness;
     return brightness == Brightness.dark;
+  }
+}
+
+launchExternalLink(linkUrl) async {
+  final Uri url = Uri.parse(linkUrl);
+  if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+    throw Exception('Could not launch $url');
   }
 }

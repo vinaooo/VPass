@@ -5,6 +5,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:vpass/globals.dart';
 
 import 'pubspec.dart';
 import 'version.dart';
@@ -116,22 +117,6 @@ class _VersionSectionState extends State<VersionSection> {
     };
   }
 
-  Map<String, dynamic> _readWebBrowserInfo(WebBrowserInfo data) {
-    return <String, dynamic>{
-      'browserName: ': describeEnum(data.browserName),
-      'appCodeName: ': data.appCodeName,
-      'appName: ': data.appName,
-      'appVersion: ': data.appVersion,
-      'platform: ': data.platform,
-      'product: ': data.product,
-      'productSub: ': data.productSub,
-      'userAgent: ': data.userAgent,
-      'vendor: ': data.vendor,
-      'vendorSub: ': data.vendorSub,
-      'hardwareConcurrency: ': data.hardwareConcurrency,
-    };
-  }
-
   Map<String, dynamic> _readMacOsDeviceInfo(MacOsDeviceInfo data) {
     return <String, dynamic>{
       'arch: ': data.arch,
@@ -158,6 +143,22 @@ class _VersionSectionState extends State<VersionSection> {
     };
   }
 
+  Map<String, dynamic> _readWebBrowserInfo(WebBrowserInfo data) {
+    return <String, dynamic>{
+      'browserName: ': describeEnum(data.browserName),
+      'appCodeName: ': data.appCodeName,
+      'appName: ': data.appName,
+      'appVersion: ': data.appVersion,
+      'platform: ': data.platform,
+      'product: ': data.product,
+      'productSub: ': data.productSub,
+      'userAgent: ': data.userAgent,
+      'vendor: ': data.vendor,
+      'vendorSub: ': data.vendorSub,
+      'hardwareConcurrency: ': data.hardwareConcurrency,
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return CardCreator(
@@ -172,36 +173,38 @@ class _VersionSectionState extends State<VersionSection> {
                 subtitle: Text(Pubspec.versionFull),
                 subtitleTextStyle: TextStyle(fontSize: 11),
                 leading: Icon(Icons.info_outline),
-                onTap: _showDialog,
               ),
-              const ListTile(
-                title: Text('Build Number:'),
+              ListTile(
+                title: const Text('Build Number:'),
                 subtitle: Text(PackageInfoUtils.getInfo('Build number')),
-                subtitleTextStyle: TextStyle(fontSize: 11),
-                leading: Icon(Icons.pin_outlined),
+                subtitleTextStyle: const TextStyle(fontSize: 11),
+                leading: const Icon(Icons.pin_outlined),
               ),
               ListTile(
                 title: const Text('System:'),
-                subtitle: Text(Platform.operatingSystem[0].toUpperCase() +
-                    Platform.operatingSystem.substring(1).toLowerCase()),
+                subtitle: isWeb
+                    ? const Text('Web')
+                    : Text(Platform.operatingSystem[0].toUpperCase() +
+                        Platform.operatingSystem.substring(1).toLowerCase()),
                 subtitleTextStyle: const TextStyle(fontSize: 11),
                 leading: const Icon(Icons.android),
                 onTap: () => _showDeviceInfoDialog(context),
               ),
-              const ListTile(
-                title: Text('Store:'),
-                // subtitle: Text(Pubspec.store),
-                subtitleTextStyle: TextStyle(fontSize: 11),
-                leading: Icon(Icons.store_mall_directory_outlined),
-              ),
+              if (!isWeb)
+                const ListTile(
+                  title: Text('Store:'),
+                  // subtitle: Text(Pubspec.store),
+                  subtitleTextStyle: TextStyle(fontSize: 11),
+                  leading: Icon(Icons.store_mall_directory_outlined),
+                ),
               ListTile(
                 title: const Text('Privacy policy'),
-                onTap: () => _launchURL(policyURL),
+                onTap: () => launchExternalLink(policyURL),
                 leading: const Icon(Icons.privacy_tip_outlined),
               ),
               ListTile(
                 title: const Text('Terms of Service'),
-                onTap: () => _launchURL(tosURL),
+                onTap: () => launchExternalLink(tosURL),
                 leading: const Icon(Icons.security),
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
@@ -260,12 +263,5 @@ class _VersionSectionState extends State<VersionSection> {
         ],
       ),
     );
-  }
-}
-
-_launchURL(linkUrl) async {
-  final Uri url = Uri.parse(linkUrl);
-  if (!await launchUrl(url)) {
-    throw Exception('Could not launch $url');
   }
 }

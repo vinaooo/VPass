@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:core';
-import 'package:google_mobile_ads/google_mobile_ads.dart'; //testeweb
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import 'settings/settings.dart';
 import 'generator.dart';
@@ -45,7 +45,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   initState() {
     super.initState();
-
     // if (isAndroid) {
     //   BannerAd(
     //     adUnitId: AdHelper.bannerAdUnitId,
@@ -120,10 +119,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     controller.dispose();
-    if (isWeb == false) {
-      if (isAndroid == true) {
-        bannerAd?.dispose();
-      }
+    if (isAndroid == true) {
+      bannerAd?.dispose();
     }
     // if (isAndroid) bannerAd?.dispose();
     super.dispose();
@@ -137,10 +134,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     final AnimationStatus status = controller.status;
 
     _isLoaded = false;
-    if (isWeb == false) {
-      if (isAndroid == true) {
-        _loadAd();
-      }
+    if (isAndroid == true) {
+      _loadAd();
     }
 
     if (systemIsDesktop == true) {
@@ -199,14 +194,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     //bannerAd = null; //remove ad banner to test and prints
-    if (isWeb == false) {
-      if (isAndroid == true) {
-        //testeweb
-        if (bannerAd != null) {
-          adHeight = 80 + bannerAd!.size.height.toDouble();
-        } else {
-          adHeight = 80;
-        }
+    if (isAndroid) {
+      if (bannerAd != null) {
+        adHeight = 80 + bannerAd!.size.height.toDouble();
+      } else {
+        adHeight = 80;
       }
     }
     return NavigationTransition(
@@ -216,11 +208,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       body: createScreenFor(ScreenSelected.values[screenIndex]),
       navigationRail: NavigationRail(
         extended: true,
-        // backgroundColor: isLinux == true
-        //     ? context.isDarkMode
-        //         ? const Color.fromARGB(255, 44, 44, 44)
-        //         : const Color.fromARGB(255, 250, 250, 250)
-        //     : null,
+        backgroundColor: isLinux
+            ? context.isDarkMode
+                ? const Color.fromARGB(255, 44, 44, 44)
+                : const Color.fromARGB(255, 250, 250, 250)
+            : null,
         destinations: const [
           NavigationRailDestination(
               // padding: EdgeInsets.zero,
@@ -244,36 +236,26 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       navigationBar: Focus(
         autofocus: true,
         child: Container(
-          height: 80,
-          // height: bannerAd == null ? 80 : adHeight, //testeweb
+          //height: 80,
+          height: bannerAd == null ? 80 : adHeight,
           alignment: Alignment.center,
           child: Column(
             children: [
-              // Stack( //testeweb
-              //   children: [
-              //     if (bannerAd != null && _isLoaded)
-              //       Align(
-              //         alignment: Alignment.bottomCenter,
-              //         child: SafeArea(
-              //           child: SizedBox(
-              //             width: bannerAd!.size.width.toDouble(),
-              //             height: bannerAd!.size.height.toDouble(),
-              //             child: AdWidget(ad: bannerAd!),
-              //           ),
-              //         ),
-              //       ),
-              //   ],
-              // ),
-
-              // SizedBox(
-              //   width: bannerAd == null ? 0 : bannerAd?.size.width.toDouble(),
-              //   height:
-              //       bannerAd == null ? 30 : bannerAd?.size.height.toDouble(),
-              //   child: bannerAd != null
-              //       ? AdWidget(ad: bannerAd!)
-              //       : const Text('Sad to see you using an adblocker!'),
-              // ),
-
+              Stack(
+                children: [
+                  if (bannerAd != null && _isLoaded && isAndroid)
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: SafeArea(
+                        child: SizedBox(
+                          width: bannerAd!.size.width.toDouble(),
+                          height: bannerAd!.size.height.toDouble(),
+                          child: AdWidget(ad: bannerAd!),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
               NavigationBar(
                 selectedIndex: screenIndex,
                 onDestinationSelected: (index) {
@@ -333,16 +315,16 @@ class _CardCreatorState extends State<CardCreator> {
             ),
             Card(
               margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              // shape: isLinux
-              //     ? RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.circular(15),
-              //       )
-              //     : null,
-              // color: isLinux
-              //     ? context.isDarkMode
-              //         ? cardColorDark
-              //         : const Color.fromARGB(255, 250, 250, 250)
-              //     : null,
+              shape: isLinux
+                  ? RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(roundCorner),
+                    )
+                  : null,
+              color: isLinux
+                  ? context.isDarkMode
+                      ? cardColorDark
+                      : const Color.fromARGB(255, 250, 250, 250)
+                  : null,
               elevation: 1,
               child: widget.child,
             ),
