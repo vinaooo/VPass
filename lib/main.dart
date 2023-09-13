@@ -26,7 +26,6 @@ void main() async {
   if (isAndroid == true) {
     MobileAds.instance.initialize();
   }
-
   runApp(
     const Vpass(),
   );
@@ -159,6 +158,7 @@ class _VpassState extends State<Vpass> {
   Widget build(BuildContext context) {
     if (isWeb == true) {
       return MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: "VPass",
         themeMode: themeMode,
         theme: ThemeData(
@@ -202,6 +202,7 @@ class _VpassState extends State<Vpass> {
           }
 
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             title: "VPass",
             themeMode: themeMode,
             theme: ThemeData(

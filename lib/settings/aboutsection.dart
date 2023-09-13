@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:vpass/globals.dart';
 
 import 'pubspec.dart';
@@ -145,7 +144,7 @@ class _VersionSectionState extends State<VersionSection> {
 
   Map<String, dynamic> _readWebBrowserInfo(WebBrowserInfo data) {
     return <String, dynamic>{
-      'browserName: ': describeEnum(data.browserName),
+      'browserName: ': data.browserName.name,
       'appCodeName: ': data.appCodeName,
       'appName: ': data.appName,
       'appVersion: ': data.appVersion,
